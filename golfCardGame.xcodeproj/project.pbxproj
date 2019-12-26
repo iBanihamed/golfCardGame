@@ -1,0 +1,439 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		742610C423B2BFCE00750E1E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 742610C323B2BFCE00750E1E /* AppDelegate.swift */; };
+		742610C923B2BFCE00750E1E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 742610C723B2BFCE00750E1E /* Main.storyboard */; };
+		742610CB23B2BFCF00750E1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 742610CA23B2BFCF00750E1E /* Assets.xcassets */; };
+		742610CE23B2BFCF00750E1E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 742610CC23B2BFCF00750E1E /* LaunchScreen.storyboard */; };
+		7466322B23B46E8F006090BE /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7466322A23B46E8F006090BE /* Deck.swift */; };
+		7466322D23B46E9D006090BE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7466322C23B46E9D006090BE /* Player.swift */; };
+		7466322F23B46EA5006090BE /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7466322E23B46EA5006090BE /* Card.swift */; };
+		7466323123B46EAD006090BE /* PlayerCardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7466323023B46EAD006090BE /* PlayerCardCollectionViewCell.swift */; };
+		7466323323B46EB3006090BE /* PlayerCardCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7466323223B46EB3006090BE /* PlayerCardCollectionViewCell.xib */; };
+		7466323923B476D9006090BE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7466323823B476D9006090BE /* ViewController.swift */; };
+		840FA9D126DF7C82C1A10AA5 /* Pods_golfCardGame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33966AD09F484CDCAA8724C5 /* Pods_golfCardGame.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		156FA131797EC8E2D6B27D97 /* Pods-golfCardGame.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-golfCardGame.debug.xcconfig"; path = "Target Support Files/Pods-golfCardGame/Pods-golfCardGame.debug.xcconfig"; sourceTree = "<group>"; };
+		33966AD09F484CDCAA8724C5 /* Pods_golfCardGame.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_golfCardGame.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A573FFDA6ABDF572C6697C8 /* Pods-golfCardGame.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-golfCardGame.release.xcconfig"; path = "Target Support Files/Pods-golfCardGame/Pods-golfCardGame.release.xcconfig"; sourceTree = "<group>"; };
+		742610C023B2BFCE00750E1E /* golfCardGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = golfCardGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		742610C323B2BFCE00750E1E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		742610C823B2BFCE00750E1E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		742610CA23B2BFCF00750E1E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		742610CD23B2BFCF00750E1E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		742610CF23B2BFCF00750E1E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7466322A23B46E8F006090BE /* Deck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Deck.swift; path = "Model copy/Deck.swift"; sourceTree = SOURCE_ROOT; };
+		7466322C23B46E9D006090BE /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Player.swift; path = "Model copy/Player.swift"; sourceTree = SOURCE_ROOT; };
+		7466322E23B46EA5006090BE /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Card.swift; path = "Model copy/Card.swift"; sourceTree = SOURCE_ROOT; };
+		7466323023B46EAD006090BE /* PlayerCardCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlayerCardCollectionViewCell.swift; path = "Model copy/PlayerCardCollectionViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		7466323223B46EB3006090BE /* PlayerCardCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlayerCardCollectionViewCell.xib; path = "Model copy/PlayerCardCollectionViewCell.xib"; sourceTree = SOURCE_ROOT; };
+		7466323823B476D9006090BE /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		742610BD23B2BFCE00750E1E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				840FA9D126DF7C82C1A10AA5 /* Pods_golfCardGame.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		742610B723B2BFCE00750E1E = {
+			isa = PBXGroup;
+			children = (
+				7466321F23B46DA9006090BE /* Model */,
+				742610C223B2BFCE00750E1E /* golfCardGame */,
+				742610C123B2BFCE00750E1E /* Products */,
+				F697EAC27B766A3CE16D36FE /* Pods */,
+				C47CFB99335C5C0A3723429A /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		742610C123B2BFCE00750E1E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				742610C023B2BFCE00750E1E /* golfCardGame.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		742610C223B2BFCE00750E1E /* golfCardGame */ = {
+			isa = PBXGroup;
+			children = (
+				7466323823B476D9006090BE /* ViewController.swift */,
+				742610C323B2BFCE00750E1E /* AppDelegate.swift */,
+				742610C723B2BFCE00750E1E /* Main.storyboard */,
+				742610CA23B2BFCF00750E1E /* Assets.xcassets */,
+				742610CC23B2BFCF00750E1E /* LaunchScreen.storyboard */,
+				742610CF23B2BFCF00750E1E /* Info.plist */,
+			);
+			path = golfCardGame;
+			sourceTree = "<group>";
+		};
+		7466321F23B46DA9006090BE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7466323223B46EB3006090BE /* PlayerCardCollectionViewCell.xib */,
+				7466323023B46EAD006090BE /* PlayerCardCollectionViewCell.swift */,
+				7466322E23B46EA5006090BE /* Card.swift */,
+				7466322C23B46E9D006090BE /* Player.swift */,
+				7466322A23B46E8F006090BE /* Deck.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C47CFB99335C5C0A3723429A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				33966AD09F484CDCAA8724C5 /* Pods_golfCardGame.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F697EAC27B766A3CE16D36FE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				156FA131797EC8E2D6B27D97 /* Pods-golfCardGame.debug.xcconfig */,
+				6A573FFDA6ABDF572C6697C8 /* Pods-golfCardGame.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		742610BF23B2BFCE00750E1E /* golfCardGame */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 742610D223B2BFCF00750E1E /* Build configuration list for PBXNativeTarget "golfCardGame" */;
+			buildPhases = (
+				95D26438B42529FD47A3143A /* [CP] Check Pods Manifest.lock */,
+				742610BC23B2BFCE00750E1E /* Sources */,
+				742610BD23B2BFCE00750E1E /* Frameworks */,
+				742610BE23B2BFCE00750E1E /* Resources */,
+				497C035D40DE4DAE54616235 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = golfCardGame;
+			productName = golfCardGame;
+			productReference = 742610C023B2BFCE00750E1E /* golfCardGame.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		742610B823B2BFCE00750E1E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1020;
+				LastUpgradeCheck = 1020;
+				ORGANIZATIONNAME = "Ismael Banihamed";
+				TargetAttributes = {
+					742610BF23B2BFCE00750E1E = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 742610BB23B2BFCE00750E1E /* Build configuration list for PBXProject "golfCardGame" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 742610B723B2BFCE00750E1E;
+			productRefGroup = 742610C123B2BFCE00750E1E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				742610BF23B2BFCE00750E1E /* golfCardGame */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		742610BE23B2BFCE00750E1E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7466323323B46EB3006090BE /* PlayerCardCollectionViewCell.xib in Resources */,
+				742610CE23B2BFCF00750E1E /* LaunchScreen.storyboard in Resources */,
+				742610CB23B2BFCF00750E1E /* Assets.xcassets in Resources */,
+				742610C923B2BFCE00750E1E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		497C035D40DE4DAE54616235 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-golfCardGame/Pods-golfCardGame-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-golfCardGame/Pods-golfCardGame-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-golfCardGame/Pods-golfCardGame-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		95D26438B42529FD47A3143A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-golfCardGame-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		742610BC23B2BFCE00750E1E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7466323923B476D9006090BE /* ViewController.swift in Sources */,
+				7466322B23B46E8F006090BE /* Deck.swift in Sources */,
+				7466322F23B46EA5006090BE /* Card.swift in Sources */,
+				7466322D23B46E9D006090BE /* Player.swift in Sources */,
+				742610C423B2BFCE00750E1E /* AppDelegate.swift in Sources */,
+				7466323123B46EAD006090BE /* PlayerCardCollectionViewCell.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		742610C723B2BFCE00750E1E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				742610C823B2BFCE00750E1E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		742610CC23B2BFCF00750E1E /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				742610CD23B2BFCF00750E1E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		742610D023B2BFCF00750E1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		742610D123B2BFCF00750E1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		742610D323B2BFCF00750E1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 156FA131797EC8E2D6B27D97 /* Pods-golfCardGame.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XQK7ZFZG48;
+				INFOPLIST_FILE = golfCardGame/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.IsmaelBanihamed.golfCardGame;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		742610D423B2BFCF00750E1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A573FFDA6ABDF572C6697C8 /* Pods-golfCardGame.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XQK7ZFZG48;
+				INFOPLIST_FILE = golfCardGame/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.IsmaelBanihamed.golfCardGame;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		742610BB23B2BFCE00750E1E /* Build configuration list for PBXProject "golfCardGame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				742610D023B2BFCF00750E1E /* Debug */,
+				742610D123B2BFCF00750E1E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		742610D223B2BFCF00750E1E /* Build configuration list for PBXNativeTarget "golfCardGame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				742610D323B2BFCF00750E1E /* Debug */,
+				742610D423B2BFCF00750E1E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 742610B823B2BFCE00750E1E /* Project object */;
+}
