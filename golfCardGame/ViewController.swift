@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     private func setUpCollectionView() {
         playerCardsCollectionView.delegate = self
         playerCardsCollectionView.dataSource = self
-        let nib = UINib(nibName: "playerCardCollectionViewCell", bundle: nil)
+        let nib = UINib(nibName: "PlayerCardCollectionViewCell", bundle: nil)
         playerCardsCollectionView.register(nib, forCellWithReuseIdentifier: cellIdentifier)
     }
  
