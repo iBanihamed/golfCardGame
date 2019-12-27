@@ -12,10 +12,17 @@ class ViewController: UIViewController {
     
 
     @IBOutlet weak var playerCardsCollectionView: UICollectionView!
+    @IBOutlet weak var player1CardsCollectionView: UICollectionView!
+    @IBOutlet weak var player2CardsCollectionView: UICollectionView!
+    @IBOutlet weak var player3CardsCollectionView: UICollectionView!
+    
+    
     var collectionViewFlowLayout: UICollectionViewFlowLayout!
     let cellIdentifier = "playerCardCollectionViewCell"
     
     var playerCards = [Card]()
+    
+    @IBOutlet weak var playersPlayingLabel: UILabel!
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -55,6 +62,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var deckImage: UIImageView!
     @IBOutlet weak var dealtPileImage: UIImageView!
     
+    @IBAction func playerSliderValueChanged(_ sender: UISlider) {
+        let currentValue = Int(sender.value)
+        
+        playersPlayingLabel.text = "Players: \(currentValue)"
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -70,10 +84,11 @@ class ViewController: UIViewController {
         dealtPile.empty()
         dealtPile.enqueue(deck.dealCard()!)
         dealtPileImage.image = UIImage(named: dealtPile.peek()!.image)
-        
+        players.append(Player(l: "USA", pn: 0))
         for player in players {
             for i in 0...3 {
                 player.hand.card[i] = deck.dealCard()!
+                playerCardsCollectionView.reloadData()
             }
         }
     }
@@ -95,7 +110,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = playerCardsCollectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
-        cell.imageView.image = UIImage(named: players[0].hand.card[indexPath.item].image)
+        cell.imageView.image = (players.isEmpty == true) ? UIImage(named: "back"): UIImage(named: players[0].hand.card[indexPath.item].image)
             return cell
     }
     

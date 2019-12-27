@@ -19,7 +19,7 @@ class Player {
         location = l
         playerNumber = pn
         score = 0
-        hand = ([Card](), [Bool](repeating: false, count: 4))
+        hand = ([Card](repeating: Card(r: Card.Rank(rawValue: 2)!, s: Card.Suit(rawValue: "spades")!), count: 4), [Bool](repeating: false, count: 4))
         done = false
     }
     
