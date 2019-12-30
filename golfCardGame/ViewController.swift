@@ -15,14 +15,28 @@ class ViewController: UIViewController {
     @IBOutlet weak var player1CardsCollectionView: UICollectionView!
     @IBOutlet weak var player2CardsCollectionView: UICollectionView!
     @IBOutlet weak var player3CardsCollectionView: UICollectionView!
-    
+    let playerCardCollectionViews: Array = [UICollectionView]()
     
     var collectionViewFlowLayout: UICollectionViewFlowLayout!
     let cellIdentifier = "playerCardCollectionViewCell"
     
+    var numberOfPlayers = 0;
     var playerCards = [Card]()
     
     @IBOutlet weak var playersPlayingLabel: UILabel!
+    @IBOutlet weak var playerScoreLabel: UILabel!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        deckImage.image = UIImage(named: "back")
+        setUpCollectionView()
+        playersPlayingLabel.text = "Players: \(numberOfPlayers)"
+        playerCardsCollectionView.isHidden = true
+        player1CardsCollectionView.isHidden = true
+        player2CardsCollectionView.isHidden = true
+        player3CardsCollectionView.isHidden = true
+    }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -63,19 +77,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var dealtPileImage: UIImageView!
     
     @IBAction func playerSliderValueChanged(_ sender: UISlider) {
-        let currentValue = Int(sender.value)
+        numberOfPlayers = Int(sender.value)
         
-        playersPlayingLabel.text = "Players: \(currentValue)"
+        playersPlayingLabel.text = "Players: \(numberOfPlayers)"
+        
     }
     
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        deckImage.image = UIImage(named: "back")
-        setUpCollectionView()
-    }
-
     @IBAction func dealPressed(_ sender: Any) {
         deck.empty()
         deck.generateDeck()
@@ -84,22 +91,67 @@ class ViewController: UIViewController {
         dealtPile.empty()
         dealtPile.enqueue(deck.dealCard()!)
         dealtPileImage.image = UIImage(named: dealtPile.peek()!.image)
-        players.append(Player(l: "USA", pn: 0))
+        for i in 0...(numberOfPlayers - 1) {
+            players.append(Player(l: "USA", pn: i))
+        }
+        playerCardsCollectionView.isHidden = false
         for player in players {
             for i in 0...3 {
                 player.hand.card[i] = deck.dealCard()!
                 playerCardsCollectionView.reloadData()
             }
         }
+        //gameStart(players: players.count)
     }
     
-    func tradeCard() {
-            
+    func drawCard() {
+        dealtPile.enqueue(deck.dealCard()!)
+        dealtPileImage.image = UIImage(named: dealtPile.peek()!.image)
     }
-    
-    func flipCard() {
+    func tradeCard(player: Int, card: Int) {
+        players[player].hand.card[card] = dealtPile.dealCard()!
+        players[player].hand.flipped[card] = true
+    }
+    func flipCard(player: Int, card: Int) {
+        players[player].hand.flipped[card] = true
+    }
+    func playerTurn(player: Int) {
+        if (players[player].hand.flipped.allSatisfy({_ in true})) {
+            return
+        } else {
+            if (players[player].isAI == true) {
+                aiTurn()
+            } else {
+                
+            }
+            //code logic for player turn
+            playerScoreLabel.text = "Score: \(players[player].calculateScore())"
+        }
         
     }
+    //logic for the turn of a computer
+    func aiTurn() {
+        
+    }
+    func checkGame() -> Bool{
+        var gameDone = false
+        for player in players {
+            if (player.hand.flipped.allSatisfy({_ in true})) {
+                gameDone = true
+            } else {
+                gameDone = false
+            }
+        }
+        return gameDone
+    }
+    func gameStart(players: Int) {
+        while (checkGame() != true) {
+            for i in 0...(players-1) {
+                playerTurn(player: i)
+            }
+        }
+    }
+    
 }
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
