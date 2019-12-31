@@ -27,12 +27,12 @@ class Player {
     func calculateScore() -> Int {
         //calculate initial score
         for i in 0...3 {
-            score += (self.hand.flipped[i] == true) ? self.hand.card[i].rank.cardValue() : 0  //need to change back to true, set to false for testing purposes
+            score += (self.hand.flipped[i] == true) ? self.hand.card[i].rank.cardValue() : 0
         }
         //find duplicates
         var duplicates: [Int: Int] = [:]
         for i in 0...3 {
-            if (self.hand.flipped[i] == true) {   //need to change back to true, set to false for testing purposes
+            if (self.hand.flipped[i] == true) {
                 duplicates[self.hand.card[i].rank.cardValue()] = (duplicates[self.hand.card[i].rank.cardValue()] ?? 0) + 1
             }
         }

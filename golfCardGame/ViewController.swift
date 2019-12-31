@@ -11,6 +11,10 @@ import UIKit
 class ViewController: UIViewController {
     
 
+    @IBOutlet weak var dealButton: UIButton!
+    @IBOutlet weak var drawCardButton: UIButton!
+    @IBOutlet weak var tradeCardButton: UIButton!
+    @IBOutlet weak var flipCardButton: UIButton!
     @IBOutlet weak var playerCardsCollectionView: UICollectionView!
     @IBOutlet weak var player1CardsCollectionView: UICollectionView!
     @IBOutlet weak var player2CardsCollectionView: UICollectionView!
@@ -20,8 +24,9 @@ class ViewController: UIViewController {
     var collectionViewFlowLayout: UICollectionViewFlowLayout!
     let cellIdentifier = "playerCardCollectionViewCell"
     
-    var numberOfPlayers = 0;
+    var numberOfPlayers = 1;
     var playerCards = [Card]()
+    var turnFinished = true
     
     @IBOutlet weak var playersPlayingLabel: UILabel!
     @IBOutlet weak var playerScoreLabel: UILabel!
@@ -31,6 +36,10 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         deckImage.image = UIImage(named: "back")
         setUpCollectionView()
+        dealButton.isEnabled = true
+        drawCardButton.isEnabled = false
+        tradeCardButton.isEnabled = false
+        flipCardButton.isEnabled = false
         playersPlayingLabel.text = "Players: \(numberOfPlayers)"
         playerCardsCollectionView.isHidden = true
         player1CardsCollectionView.isHidden = true
@@ -78,9 +87,7 @@ class ViewController: UIViewController {
     
     @IBAction func playerSliderValueChanged(_ sender: UISlider) {
         numberOfPlayers = Int(sender.value)
-        
         playersPlayingLabel.text = "Players: \(numberOfPlayers)"
-        
     }
     
     @IBAction func dealPressed(_ sender: Any) {
@@ -104,13 +111,22 @@ class ViewController: UIViewController {
         }
         //testing calc score function
         playerScoreLabel.text = "Score: \(players[0].calculateScore())"
+        dealButton.isEnabled = false
+        flipCardButton.isEnabled = true
+        tradeCardButton.isEnabled = true
+        drawCardButton.isEnabled = true
         //-------------------------
         //gameStart(players: players.count)
     }
-    
-    func drawCard() {
+    @IBAction func drawCard(_ sender: Any) {
         dealtPile.enqueue(deck.dealCard()!)
         dealtPileImage.image = UIImage(named: dealtPile.peek()!.image)
+    }
+    @IBAction func tradeCardPressed(_ sender: Any) {
+        turnFinished = true
+    }
+    @IBAction func flipCardPressed(_ sender: Any) {
+        turnFinished = true
     }
     func tradeCard(player: Player, card: Int) {
         let cardToTrade = player.hand.card[card]
@@ -123,13 +139,19 @@ class ViewController: UIViewController {
         player.hand.flipped[card] = true
     }
     func playerTurn(player: Int) {
+        drawCardButton.isEnabled = true
+        tradeCardButton.isEnabled = true
         if (players[player].hand.flipped.allSatisfy({_ in true})) {
             return
         } else {
             if (players[player].isAI == true) {
                 aiTurn(player: players[player])
             } else {
-                
+                turnFinished = false
+                while (turnFinished != true) {
+                    
+                    turnFinished = true
+                }
             }
             //code logic for player turn
             playerScoreLabel.text = "Score: \(players[player].calculateScore())"
@@ -142,6 +164,8 @@ class ViewController: UIViewController {
             let cardToTrade = 0
             tradeCard(player: player, card: cardToTrade)
             flipCard(player: player, card: cardToTrade)
+        } else {
+            
         }
     }
     func checkGame() -> Bool{

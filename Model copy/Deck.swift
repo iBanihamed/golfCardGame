@@ -29,7 +29,7 @@ class Deck {
     }
     func peek() -> Card? {
         if !list.isEmpty {
-            return list[0]
+            return list.last
         } else {
             return nil
         }
@@ -40,7 +40,7 @@ class Deck {
     }
     func dealCard() -> Card? {
         if !list.isEmpty {
-            return list.removeFirst()
+            return list.removeLast()
         } else {
             return nil
         }
