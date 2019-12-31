@@ -84,6 +84,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func dealPressed(_ sender: Any) {
+        players.removeAll()
         deck.empty()
         deck.generateDeck()
         deck.shuffleDeck()
@@ -101,6 +102,9 @@ class ViewController: UIViewController {
                 playerCardsCollectionView.reloadData()
             }
         }
+        //testing calc score function
+        playerScoreLabel.text = "Score: \(players[0].calculateScore())"
+        //-------------------------
         //gameStart(players: players.count)
     }
     
@@ -108,19 +112,22 @@ class ViewController: UIViewController {
         dealtPile.enqueue(deck.dealCard()!)
         dealtPileImage.image = UIImage(named: dealtPile.peek()!.image)
     }
-    func tradeCard(player: Int, card: Int) {
-        players[player].hand.card[card] = dealtPile.dealCard()!
-        players[player].hand.flipped[card] = true
+    func tradeCard(player: Player, card: Int) {
+        let cardToTrade = player.hand.card[card]
+        player.hand.card[card] = dealtPile.dealCard()!
+        dealtPile.enqueue(cardToTrade)
+        player.hand.flipped[card] = true
+        dealtPileImage.image = UIImage(named: dealtPile.peek()!.image)
     }
-    func flipCard(player: Int, card: Int) {
-        players[player].hand.flipped[card] = true
+    func flipCard(player: Player, card: Int) {
+        player.hand.flipped[card] = true
     }
     func playerTurn(player: Int) {
         if (players[player].hand.flipped.allSatisfy({_ in true})) {
             return
         } else {
             if (players[player].isAI == true) {
-                aiTurn()
+                aiTurn(player: players[player])
             } else {
                 
             }
@@ -129,9 +136,13 @@ class ViewController: UIViewController {
         }
         
     }
-    //logic for the turn of a computer
-    func aiTurn() {
-        
+    //logic for the turn of a computer, long way to go with this
+    func aiTurn(player: Player) {
+        if (dealtPile.peek()?.rank.cardValue() == 0) {
+            let cardToTrade = 0
+            tradeCard(player: player, card: cardToTrade)
+            flipCard(player: player, card: cardToTrade)
+        }
     }
     func checkGame() -> Bool{
         var gameDone = false
