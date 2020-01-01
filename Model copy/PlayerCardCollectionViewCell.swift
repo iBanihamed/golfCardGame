@@ -10,6 +10,12 @@ import UIKit
 
 class PlayerCardCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var cardButton: UIButton!
+    
+    
+    @IBAction func cardButtonPressed(_ sender: Any) {
+        
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()

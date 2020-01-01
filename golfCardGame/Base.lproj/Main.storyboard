@@ -195,13 +195,13 @@
                         <outlet property="deckImage" destination="tdk-mh-Vn8" id="YkC-Jy-HtP"/>
                         <outlet property="drawCardButton" destination="0Vf-vR-eG4" id="t7P-uD-ANn"/>
                         <outlet property="flipCardButton" destination="Yr5-Zg-5ti" id="Xyv-ke-gRf"/>
-                        <outlet property="player1CardsCollectionView" destination="abp-0F-vbV" id="Yuf-xe-lDD"/>
-                        <outlet property="player2CardsCollectionView" destination="9i8-TR-UAB" id="yWb-4u-QQa"/>
-                        <outlet property="player3CardsCollectionView" destination="xDF-Y1-8UC" id="kpp-ov-elt"/>
-                        <outlet property="playerCardsCollectionView" destination="O4R-nY-gUy" id="oVQ-ch-ylw"/>
                         <outlet property="playerScoreLabel" destination="Xn5-To-leD" id="Wee-6R-AwX"/>
                         <outlet property="playersPlayingLabel" destination="vte-l5-JL8" id="kYT-7G-xnl"/>
                         <outlet property="tradeCardButton" destination="M3c-nw-Ppi" id="A1v-bb-0zi"/>
+                        <outletCollection property="cardCollectionViews" destination="O4R-nY-gUy" collectionClass="NSMutableArray" id="BRh-9w-Tb4"/>
+                        <outletCollection property="cardCollectionViews" destination="abp-0F-vbV" collectionClass="NSMutableArray" id="qIM-8c-gJJ"/>
+                        <outletCollection property="cardCollectionViews" destination="9i8-TR-UAB" collectionClass="NSMutableArray" id="jWI-bd-c1o"/>
+                        <outletCollection property="cardCollectionViews" destination="xDF-Y1-8UC" collectionClass="NSMutableArray" id="UJS-GM-db3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
