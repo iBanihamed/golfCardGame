@@ -54,4 +54,12 @@ class Player {
         print(score)
         return score
     }
+    
+    //AI functionality
+    func worstCard() {
+        
+    }
+    func bestCard() {
+        
+    }
 }

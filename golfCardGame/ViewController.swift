@@ -14,10 +14,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var drawCardButton: UIButton!
     @IBOutlet weak var tradeCardButton: UIButton!
     @IBOutlet weak var flipCardButton: UIButton!
+    @IBOutlet weak var playerSlider: UISlider!
     
     @IBOutlet var cardCollectionViews: [UICollectionView]!
+    @IBOutlet var computerScoreLabels: [UILabel]!
     
-
     @IBOutlet weak var deckImage: UIImageView!
     @IBOutlet weak var dealtPileImage: UIImageView!
     
@@ -82,9 +83,6 @@ class ViewController: UIViewController {
         }
     }
 
-    
-
-    
     @IBAction func playerSliderValueChanged(_ sender: UISlider) {
         numberOfPlayers = Int(sender.value)
         for i in 0...MAX_PLAYERS - 1 {
@@ -110,9 +108,9 @@ class ViewController: UIViewController {
         for i in 0...(numberOfPlayers - 1) {
             players.append(Player(l: "USA", pn: i))
         }
-        
+        var p = 0
         for player in players {
-            var p = 0
+            
             for i in 0...MAX_PLAYERS - 1 {
                 player.hand.card[i] = deck.dealCard()!
             }
@@ -123,15 +121,18 @@ class ViewController: UIViewController {
         //testing calc score function
         playerScoreLabel.text = "Score: \(players[0].calculateScore())"
         dealButton.isEnabled = false
+        dealButton.isHidden = true
         flipCardButton.isEnabled = true
         tradeCardButton.isEnabled = true
         drawCardButton.isEnabled = true
+        playerSlider.isEnabled = false
+        playerSlider.isHidden = true
+        playersPlayingLabel.isHidden = true
         //-------------------------
         //gameStart(players: players.count)
     }
-    @IBAction func drawCard(_ sender: Any) {
-        dealtPile.enqueue(deck.dealCard()!)
-        dealtPileImage.image = UIImage(named: dealtPile.peek()!.image)
+    @IBAction func drawCardPressed(_ sender: Any) {
+        drawCard()
     }
     @IBAction func tradeCardPressed(_ sender: Any) {
         let cardToTrade = 0 //need to change code to accept user input for card to trade
@@ -141,6 +142,10 @@ class ViewController: UIViewController {
     @IBAction func flipCardPressed(_ sender: Any) {
         //flipCard(player: <#T##Player#>, card: <#T##Int#>)
         turnFinished = true
+    }
+    func drawCard() {
+        dealtPile.enqueue(deck.dealCard()!)
+        dealtPileImage.image = UIImage(named: dealtPile.peek()!.image)
     }
     func tradeCard(player: Int, card: Int) {
         let cardToTrade = players[player].hand.card[card]
@@ -155,28 +160,25 @@ class ViewController: UIViewController {
         players[player].hand.flipped[card] = true
     }
     func playerTurn(player: Int) {
-        drawCardButton.isEnabled = true
-        tradeCardButton.isEnabled = true
-        if (players[player].hand.flipped.allSatisfy({_ in true})) {
-            return
+        if players[player].isAI == true {
+            aiTurn(player: player)
         } else {
-            if (players[player].isAI == true) {
-                aiTurn(player: players[player])
+            if (players[player].hand.flipped.allSatisfy({_ in true})) {
+                drawCardButton.isEnabled = false
+                tradeCardButton.isEnabled = false
+                flipCardButton.isEnabled = false
+                return
             } else {
-                turnFinished = false
-                while (turnFinished != true) {
-                    
-                    turnFinished = true
-                }
+                drawCardButton.isEnabled = true
+                tradeCardButton.isEnabled = true
+                flipCardButton.isEnabled = true
             }
-            //code logic for player turn
-            playerScoreLabel.text = "Score: \(players[player].calculateScore())"
         }
-        
+        playerScoreLabel.text = "Score: \(players[player].calculateScore())"
     }
     //logic for the turn of a computer, long way to go with this
-    func aiTurn(player: Player) {
-        if (dealtPile.peek()?.rank.cardValue() == 0) {
+    func aiTurn(player: Int) {
+        if (dealtPile.peek()?.rank.rankDescription() == "king") {
             //let cardToTrade = 0
             //tradeCard(player: player, card: cardToTrade)
             //flipCard(player: player, card: cardToTrade)
@@ -184,17 +186,15 @@ class ViewController: UIViewController {
             
         }
     }
+    
     func checkGame() -> Bool{
         var gameDone = false
         for player in players {
-            if (player.hand.flipped.allSatisfy({_ in true})) {
-                gameDone = true
-            } else {
-                gameDone = false
-            }
+            gameDone = (player.hand.flipped.allSatisfy({_ in true})) ? true : false
         }
         return gameDone
     }
+    
     func gameStart(players: Int) {
         while (checkGame() != true) {
             for i in 0...(players - 1) {
