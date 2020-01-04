@@ -130,6 +130,8 @@ class ViewController: UIViewController {
         playersPlayingLabel.isHidden = true
         //-------------------------
         //gameStart(players: players.count)
+        
+        //testing worstcard and bestcard functions
     }
     @IBAction func drawCardPressed(_ sender: Any) {
         drawCard()
@@ -172,16 +174,14 @@ class ViewController: UIViewController {
                 drawCardButton.isEnabled = true
                 tradeCardButton.isEnabled = true
                 flipCardButton.isEnabled = true
+                playerScoreLabel.text = "Score: \(players[player].calculateScore())"
             }
         }
-        playerScoreLabel.text = "Score: \(players[player].calculateScore())"
     }
     //logic for the turn of a computer, long way to go with this
     func aiTurn(player: Int) {
         if (dealtPile.peek()?.rank.rankDescription() == "king") {
-            //let cardToTrade = 0
-            //tradeCard(player: player, card: cardToTrade)
-            //flipCard(player: player, card: cardToTrade)
+            tradeCard(player: player, card: players[player].worstCard())
         } else {
             
         }

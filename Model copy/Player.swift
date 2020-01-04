@@ -36,7 +36,6 @@ class Player {
                 duplicates[self.hand.card[i].rank.cardValue()] = (duplicates[self.hand.card[i].rank.cardValue()] ?? 0) + 1
             }
         }
-        print(duplicates)
         //subtract the duplicate values from the player score
         for duplicate in duplicates {
             switch duplicate.value {
@@ -51,15 +50,62 @@ class Player {
             default: break
             }
         }
-        print(score)
         return score
     }
     
     //AI functionality
-    func worstCard() {
-        
+    //finds the worst card from unflipped cards to use for trading card functionality of AI
+    //if function returns 0 that means all cards are good cards and no card should be traded
+    func worstCard() -> Int{
+        var cardMap: [Int: Int] = [:]
+        for i in 0...3 {
+            if (self.hand.flipped[i] == false) {
+                cardMap[self.hand.card[i].rank.cardValue()] = (cardMap[self.hand.card[i].rank.cardValue()] ?? 0) + 1
+            }
+        }
+        print(cardMap)
+        var worstCardValue = 0
+        for card in cardMap {
+            if (card.key > worstCardValue && (card.value == 1 || card.value == 3)) {
+                worstCardValue = card.key
+            }
+        }
+        print("Worst card: \(worstCardValue)")
+        var worstCardIndex = 0
+        for i in 0...3 {
+            if (self.hand.card[i].rank.cardValue() == worstCardValue && self.hand.flipped[i] == false) {
+                worstCardIndex = i
+            }
+        }
+        print(worstCardIndex)
+        return worstCardIndex
     }
-    func bestCard() {
-        
+    //finds the best card to flip, to use for trading card functionality of AI
+    func bestCard() -> Int{
+        var cardMap: [Int: Int] = [:]
+        for i in 0...3 {
+            if (self.hand.flipped[i] == false) {
+                cardMap[self.hand.card[i].rank.cardValue()] = (cardMap[self.hand.card[i].rank.cardValue()] ?? 0) + 1
+            }
+        }
+        print(cardMap)
+        var bestCardValue = 13
+        var bestCardIndex = 0
+        for card in cardMap {
+            if (card.value == 2 || card.value == 4) {
+                bestCardValue = card.key
+                break
+            } else if (card.key < bestCardValue) {
+                bestCardValue = card.key
+            }
+        }
+        print("Best card: \(bestCardValue)")
+        for i in 0...3 {
+            if (self.hand.card[i].rank.cardValue() == bestCardValue && self.hand.flipped[i] == false) {
+                bestCardIndex = i
+            }
+        }
+        print(bestCardIndex)
+        return bestCardIndex
     }
 }
