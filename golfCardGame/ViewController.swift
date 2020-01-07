@@ -34,6 +34,7 @@ class ViewController: UIViewController {
     var players: Array = [Player]()
     var deck = Deck()
     let MAX_PLAYERS = 4
+    let semaphore = DispatchSemaphore(value: 1)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,9 +130,7 @@ class ViewController: UIViewController {
         playerSlider.isHidden = true
         playersPlayingLabel.isHidden = true
         //-------------------------
-        //gameStart(players: players.count)
-        
-        //testing worstcard and bestcard functions
+        //gameStart(playerCount: players.count)
     }
     @IBAction func drawCardPressed(_ sender: Any) {
         drawCard()
@@ -139,11 +138,16 @@ class ViewController: UIViewController {
     @IBAction func tradeCardPressed(_ sender: Any) {
         let cardToTrade = 0 //need to change code to accept user input for card to trade
         tradeCard(player: 0, card: cardToTrade)
-        turnFinished = true
+        cardCollectionViews[0].reloadData()
+        playerScoreLabel.text = "Score: \(players[0].calculateScore())"
+        aiTurns()
     }
     @IBAction func flipCardPressed(_ sender: Any) {
-        //flipCard(player: <#T##Player#>, card: <#T##Int#>)
-        turnFinished = true
+        let cardToFlip = 0 //need to change code to accept user input for card to trade
+        flipCard(player: 0, card: cardToFlip)
+        cardCollectionViews[0].reloadData()
+        playerScoreLabel.text = "Score: \(players[0].calculateScore())"
+        aiTurns()
     }
     func drawCard() {
         dealtPile.enqueue(deck.dealCard()!)
@@ -165,40 +169,62 @@ class ViewController: UIViewController {
         if players[player].isAI == true {
             aiTurn(player: player)
         } else {
-            if (players[player].hand.flipped.allSatisfy({_ in true})) {
+            if (players[player].hand.flipped.contains(false)) {
+                drawCardButton.isEnabled = true
+                tradeCardButton.isEnabled = true
+                flipCardButton.isEnabled = true
+                return
+            } else {
                 drawCardButton.isEnabled = false
                 tradeCardButton.isEnabled = false
                 flipCardButton.isEnabled = false
                 return
-            } else {
-                drawCardButton.isEnabled = true
-                tradeCardButton.isEnabled = true
-                flipCardButton.isEnabled = true
-                playerScoreLabel.text = "Score: \(players[player].calculateScore())"
             }
         }
+        cardCollectionViews[player].reloadData()
     }
     //logic for the turn of a computer, long way to go with this
     func aiTurn(player: Int) {
         if (dealtPile.peek()?.rank.rankDescription() == "king") {
             tradeCard(player: player, card: players[player].worstCard())
         } else {
-            
+            print("card flipped")
+            flipCard(player: player, card: players[player].bestCard())
         }
+    }
+    
+    func aiTurns() {
+        for i in 1...players.count - 1 {
+            if (dealtPile.peek()?.rank.rankDescription() == "king") {
+                tradeCard(player: i, card: players[i].worstCard())
+                cardCollectionViews[i].reloadData()
+                print("card traded")
+            } else {
+                flipCard(player: i, card: players[i].bestCard())
+                cardCollectionViews[i].reloadData()
+                print("card flipped")
+            }
+        }
+        (checkGame()) ? endGame() : print("your turn")
     }
     
     func checkGame() -> Bool{
-        var gameDone = false
-        for player in players {
-            gameDone = (player.hand.flipped.allSatisfy({_ in true})) ? true : false
-        }
-        return gameDone
+        //var gameDone = false
+//        for player in players {
+//            gameDone = (player.hand.flipped.allSatisfy({_ in true})) ? true : false
+//        }
+        return false
+        //return gameDone
+    }
+    func endGame() {
+        
     }
     
-    func gameStart(players: Int) {
+    func gameStart(playerCount: Int) {
         while (checkGame() != true) {
-            for i in 0...(players - 1) {
+            for i in 0...(playerCount - 1) {
                 playerTurn(player: i)
+                
             }
         }
     }
@@ -213,7 +239,12 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
-        cell.imageView.image = (players.isEmpty == true) ? UIImage(named: "back"): UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+        //cell.imageView.image = (players.isEmpty == true) ? UIImage(named: "back"): UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+        if (players.isEmpty == true || players[collectionView.tag].hand.flipped[indexPath.item] == false) {
+            cell.imageView.image = UIImage(named: "back")
+        } else {
+            cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+        }
             return cell
     }
     
