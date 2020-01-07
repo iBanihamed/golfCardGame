@@ -140,6 +140,9 @@ class ViewController: UIViewController {
         tradeCard(player: 0, card: cardToTrade)
         cardCollectionViews[0].reloadData()
         playerScoreLabel.text = "Score: \(players[0].calculateScore())"
+        drawCardButton.isEnabled = false
+        tradeCardButton.isEnabled = false
+        flipCardButton.isEnabled = false
         aiTurns()
     }
     @IBAction func flipCardPressed(_ sender: Any) {
@@ -147,6 +150,9 @@ class ViewController: UIViewController {
         flipCard(player: 0, card: cardToFlip)
         cardCollectionViews[0].reloadData()
         playerScoreLabel.text = "Score: \(players[0].calculateScore())"
+        drawCardButton.isEnabled = false
+        tradeCardButton.isEnabled = false
+        flipCardButton.isEnabled = false
         aiTurns()
     }
     func drawCard() {
@@ -165,33 +171,6 @@ class ViewController: UIViewController {
     func flipCard(player: Int, card: Int) {
         players[player].hand.flipped[card] = true
     }
-    func playerTurn(player: Int) {
-        if players[player].isAI == true {
-            aiTurn(player: player)
-        } else {
-            if (players[player].hand.flipped.contains(false)) {
-                drawCardButton.isEnabled = true
-                tradeCardButton.isEnabled = true
-                flipCardButton.isEnabled = true
-                return
-            } else {
-                drawCardButton.isEnabled = false
-                tradeCardButton.isEnabled = false
-                flipCardButton.isEnabled = false
-                return
-            }
-        }
-        cardCollectionViews[player].reloadData()
-    }
-    //logic for the turn of a computer, long way to go with this
-    func aiTurn(player: Int) {
-        if (dealtPile.peek()?.rank.rankDescription() == "king") {
-            tradeCard(player: player, card: players[player].worstCard())
-        } else {
-            print("card flipped")
-            flipCard(player: player, card: players[player].bestCard())
-        }
-    }
     
     func aiTurns() {
         for i in 1...players.count - 1 {
@@ -205,28 +184,22 @@ class ViewController: UIViewController {
                 print("card flipped")
             }
         }
+        drawCardButton.isEnabled = true
+        tradeCardButton.isEnabled = true
+        flipCardButton.isEnabled = true
         (checkGame()) ? endGame() : print("your turn")
     }
     
     func checkGame() -> Bool{
-        //var gameDone = false
-//        for player in players {
-//            gameDone = (player.hand.flipped.allSatisfy({_ in true})) ? true : false
-//        }
-        return false
-        //return gameDone
-    }
-    func endGame() {
-        
+        var gameDone = false
+        for player in players {
+            gameDone = (player.hand.flipped.contains(false)) ? false : true
+        }
+        return gameDone
     }
     
-    func gameStart(playerCount: Int) {
-        while (checkGame() != true) {
-            for i in 0...(playerCount - 1) {
-                playerTurn(player: i)
-                
-            }
-        }
+    func endGame() {
+        //Code end Game routine. Give user notification if they won or lost and then offer reset/retry
     }
     
 }
