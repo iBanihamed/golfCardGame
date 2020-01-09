@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CRNotifications
 
 class ViewController: UIViewController {
     
@@ -124,8 +125,11 @@ class ViewController: UIViewController {
         dealButton.isEnabled = false
         dealButton.isHidden = true
         flipCardButton.isEnabled = true
+        flipCardButton.isHidden = false
         tradeCardButton.isEnabled = true
+        tradeCardButton.isHidden = false
         drawCardButton.isEnabled = true
+        drawCardButton.isHidden = false
         playerSlider.isEnabled = false
         playerSlider.isHidden = true
         playersPlayingLabel.isHidden = true
@@ -138,7 +142,6 @@ class ViewController: UIViewController {
     @IBAction func tradeCardPressed(_ sender: Any) {
         let cardToTrade = 0 //need to change code to accept user input for card to trade
         tradeCard(player: 0, card: cardToTrade)
-        cardCollectionViews[0].reloadData()
         playerScoreLabel.text = "Score: \(players[0].calculateScore())"
         drawCardButton.isEnabled = false
         tradeCardButton.isEnabled = false
@@ -148,7 +151,6 @@ class ViewController: UIViewController {
     @IBAction func flipCardPressed(_ sender: Any) {
         let cardToFlip = 0 //need to change code to accept user input for card to trade
         flipCard(player: 0, card: cardToFlip)
-        cardCollectionViews[0].reloadData()
         playerScoreLabel.text = "Score: \(players[0].calculateScore())"
         drawCardButton.isEnabled = false
         tradeCardButton.isEnabled = false
@@ -170,18 +172,29 @@ class ViewController: UIViewController {
     }
     func flipCard(player: Int, card: Int) {
         players[player].hand.flipped[card] = true
+        cardCollectionViews[player].reloadData()
     }
     
     func aiTurns() {
         for i in 1...players.count - 1 {
             if (dealtPile.peek()?.rank.rankDescription() == "king") {
                 tradeCard(player: i, card: players[i].worstCard())
-                cardCollectionViews[i].reloadData()
                 print("card traded")
             } else {
-                flipCard(player: i, card: players[i].bestCard())
-                cardCollectionViews[i].reloadData()
-                print("card flipped")
+                if(((dealtPile.peek()?.rank.cardValue())!) < players[i].worstCard()) {
+                    tradeCard(player: i, card: players[i].worstCard())
+                    print("card traded for better card")
+                } else {
+                    drawCard()
+                    print("drew card")
+                    if((dealtPile.peek()!.rank.cardValue()) < players[i].worstCard()) {
+                        tradeCard(player: i, card: players[i].worstCard())
+                        print("card traded for better card")
+                    } else {
+                        flipCard(player: i, card: players[i].bestCard())
+                        print("card flipped")
+                    }
+                }
             }
         }
         drawCardButton.isEnabled = true
@@ -200,6 +213,27 @@ class ViewController: UIViewController {
     
     func endGame() {
         //Code end Game routine. Give user notification if they won or lost and then offer reset/retry
+        var playerWon = false
+        for i in 1...players.count - 1 {
+            if players[0].calculateScore() < players[i].calculateScore() {
+                playerWon = false
+                print("You won!")
+                break
+            } else {
+                playerWon = true
+                print("you lost :(")
+            }
+        }
+        dealButton.isEnabled = true
+        dealButton.isHidden = false
+        playerSlider.isEnabled = true
+        playerSlider.isHidden = false
+        drawCardButton.isEnabled = false
+        tradeCardButton.isEnabled = false
+        flipCardButton.isEnabled = false
+        drawCardButton.isHidden = true
+        tradeCardButton.isHidden = true
+        flipCardButton.isHidden = true
     }
     
 }

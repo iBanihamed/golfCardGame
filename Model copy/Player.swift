@@ -25,6 +25,7 @@ class Player {
         score = 0
     }
     func calculateScore() -> Int {
+        score = 0
         //calculate initial score
         for i in 0...3 {
             score += (self.hand.flipped[i] == true) ? self.hand.card[i].rank.cardValue() : 0
@@ -77,7 +78,6 @@ class Player {
                 worstCardIndex = i
             }
         }
-        print(worstCardIndex)
         return worstCardIndex
     }
     //finds the best card to flip, to use for trading card functionality of AI
@@ -105,7 +105,6 @@ class Player {
                 bestCardIndex = i
             }
         }
-        print(bestCardIndex)
         return bestCardIndex
     }
 }
