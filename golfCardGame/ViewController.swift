@@ -18,23 +18,23 @@ class ViewController: UIViewController {
     @IBOutlet weak var playerSlider: UISlider!
     
     @IBOutlet var cardCollectionViews: [UICollectionView]!
-    @IBOutlet var computerScoreLabels: [UILabel]!
+    @IBOutlet var scoreLabels: [UILabel]!
     
     @IBOutlet weak var deckImage: UIImageView!
     @IBOutlet weak var dealtPileImage: UIImageView!
     
     @IBOutlet weak var playersPlayingLabel: UILabel!
-    @IBOutlet weak var playerScoreLabel: UILabel!
     
     let cellIdentifier = "playerCardCollectionViewCell"
     var collectionViewFlowLayout: UICollectionViewFlowLayout!
-    var numberOfPlayers = 1;
+    var numberOfPlayers = 2;
     var playerCards = [Card]()
     var turnFinished = true
     var dealtPile = Deck()
     var players: Array = [Player]()
     var deck = Deck()
     let MAX_PLAYERS = 4
+    let MAX_CARDS = 4
     let semaphore = DispatchSemaphore(value: 1)
     
     override func viewDidLoad() {
@@ -87,13 +87,13 @@ class ViewController: UIViewController {
 
     @IBAction func playerSliderValueChanged(_ sender: UISlider) {
         numberOfPlayers = Int(sender.value)
-        for i in 0...MAX_PLAYERS - 1 {
-            if(i <= Int(sender.value - 1)) {
-                cardCollectionViews[i].isHidden = false
-            } else {
-                cardCollectionViews[i].isHidden = true
-            }
-        }
+//        for i in 0...MAX_PLAYERS - 1 {
+//            if(i <= Int(sender.value - 1)) {
+//                cardCollectionViews[i].isHidden = false
+//            } else {
+//                cardCollectionViews[i].isHidden = true
+//            }
+//        }
         playersPlayingLabel.text = "Players: \(numberOfPlayers)"
     }
     
@@ -112,16 +112,22 @@ class ViewController: UIViewController {
         }
         var p = 0
         for player in players {
-            
-            for i in 0...MAX_PLAYERS - 1 {
+            for i in 0...MAX_CARDS - 1 {
                 player.hand.card[i] = deck.dealCard()!
             }
             cardCollectionViews[p].isHidden = false
             cardCollectionViews[p].reloadData()
             p += 1
         }
-        //testing calc score function
-        playerScoreLabel.text = "Score: \(players[0].calculateScore())"
+        for i in 0...MAX_PLAYERS - 1 {
+            if i >= numberOfPlayers {
+                cardCollectionViews[i].isHidden = true
+                scoreLabels[i].text = ""
+            } else {
+                cardCollectionViews[i].isHidden = false
+                scoreLabels[i].text = "Score:"
+            }
+        }
         dealButton.isEnabled = false
         dealButton.isHidden = true
         flipCardButton.isEnabled = true
@@ -142,7 +148,6 @@ class ViewController: UIViewController {
     @IBAction func tradeCardPressed(_ sender: Any) {
         let cardToTrade = 0 //need to change code to accept user input for card to trade
         tradeCard(player: 0, card: cardToTrade)
-        playerScoreLabel.text = "Score: \(players[0].calculateScore())"
         drawCardButton.isEnabled = false
         tradeCardButton.isEnabled = false
         flipCardButton.isEnabled = false
@@ -151,7 +156,6 @@ class ViewController: UIViewController {
     @IBAction func flipCardPressed(_ sender: Any) {
         let cardToFlip = 0 //need to change code to accept user input for card to trade
         flipCard(player: 0, card: cardToFlip)
-        playerScoreLabel.text = "Score: \(players[0].calculateScore())"
         drawCardButton.isEnabled = false
         tradeCardButton.isEnabled = false
         flipCardButton.isEnabled = false
@@ -166,12 +170,14 @@ class ViewController: UIViewController {
         players[player].hand.card[card] = dealtPile.dealCard()!
         dealtPile.enqueue(cardToTrade)
         players[player].hand.flipped[card] = true
+        scoreLabels[player].text = "Score: \(players[player].calculateScore())"
         dealtPileImage.image = UIImage(named: dealtPile.peek()!.image)
         cardCollectionViews[player].reloadData()
         
     }
     func flipCard(player: Int, card: Int) {
         players[player].hand.flipped[card] = true
+        scoreLabels[player].text = "Score: \(players[player].calculateScore())"
         cardCollectionViews[player].reloadData()
     }
     
@@ -216,13 +222,15 @@ class ViewController: UIViewController {
         var playerWon = false
         for i in 1...players.count - 1 {
             if players[0].calculateScore() < players[i].calculateScore() {
-                playerWon = false
-                print("You won!")
-                break
-            } else {
                 playerWon = true
-                print("you lost :(")
+            } else {
+                playerWon = false
+                CRNotifications.showNotification(type: CRNotifications.info, title: "You lost 😤", message: "Better luck next time", dismissDelay: 3)
+                break
             }
+        }
+        if playerWon {
+            CRNotifications.showNotification(type: CRNotifications.info, title: "You won 😁", message: "Aye", dismissDelay: 3)
         }
         dealButton.isEnabled = true
         dealButton.isHidden = false
@@ -234,13 +242,14 @@ class ViewController: UIViewController {
         drawCardButton.isHidden = true
         tradeCardButton.isHidden = true
         flipCardButton.isHidden = true
+        playersPlayingLabel.isHidden = false
     }
     
 }
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return MAX_CARDS
         //return players[0].hand.card.count
     }
     

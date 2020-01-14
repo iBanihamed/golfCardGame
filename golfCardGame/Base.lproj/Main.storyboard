@@ -108,7 +108,7 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="4" translatesAutoresizingMaskIntoConstraints="NO" id="Sb0-sm-8Qq">
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="2" minValue="2" maxValue="4" translatesAutoresizingMaskIntoConstraints="NO" id="Sb0-sm-8Qq">
                                 <rect key="frame" x="139" y="500" width="118" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
@@ -185,22 +185,22 @@
                                     <action selector="drawCardPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pJH-Mm-9Dp"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="C1:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ba-ss-SzA">
-                                <rect key="frame" x="69" y="236" width="24" height="14"/>
+                            <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QV0-Uj-mQZ">
+                                <rect key="frame" x="150" y="229" width="117" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="C2:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QV0-Uj-mQZ">
-                                <rect key="frame" x="195" y="229" width="27" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QYR-Ey-Oxu">
+                                <rect key="frame" x="275" y="229" width="119" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="C3:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QYR-Ey-Oxu">
-                                <rect key="frame" x="320" y="229" width="27" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ba-ss-SzA">
+                                <rect key="frame" x="20" y="229" width="122" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -216,7 +216,6 @@
                         <outlet property="deckImage" destination="tdk-mh-Vn8" id="YkC-Jy-HtP"/>
                         <outlet property="drawCardButton" destination="0Vf-vR-eG4" id="t7P-uD-ANn"/>
                         <outlet property="flipCardButton" destination="Yr5-Zg-5ti" id="Xyv-ke-gRf"/>
-                        <outlet property="playerScoreLabel" destination="Xn5-To-leD" id="Wee-6R-AwX"/>
                         <outlet property="playerSlider" destination="Sb0-sm-8Qq" id="lJd-vh-Axs"/>
                         <outlet property="playersPlayingLabel" destination="vte-l5-JL8" id="kYT-7G-xnl"/>
                         <outlet property="tradeCardButton" destination="M3c-nw-Ppi" id="A1v-bb-0zi"/>
@@ -224,9 +223,10 @@
                         <outletCollection property="cardCollectionViews" destination="abp-0F-vbV" collectionClass="NSMutableArray" id="qIM-8c-gJJ"/>
                         <outletCollection property="cardCollectionViews" destination="9i8-TR-UAB" collectionClass="NSMutableArray" id="jWI-bd-c1o"/>
                         <outletCollection property="cardCollectionViews" destination="xDF-Y1-8UC" collectionClass="NSMutableArray" id="UJS-GM-db3"/>
-                        <outletCollection property="computerScoreLabels" destination="0ba-ss-SzA" collectionClass="NSMutableArray" id="dXT-Pf-wF0"/>
-                        <outletCollection property="computerScoreLabels" destination="QV0-Uj-mQZ" collectionClass="NSMutableArray" id="umu-ib-2S5"/>
-                        <outletCollection property="computerScoreLabels" destination="QYR-Ey-Oxu" collectionClass="NSMutableArray" id="1Y0-Ow-Qtz"/>
+                        <outletCollection property="scoreLabels" destination="Xn5-To-leD" collectionClass="NSMutableArray" id="c9b-qe-3nZ"/>
+                        <outletCollection property="scoreLabels" destination="0ba-ss-SzA" collectionClass="NSMutableArray" id="EIx-6k-bKb"/>
+                        <outletCollection property="scoreLabels" destination="QV0-Uj-mQZ" collectionClass="NSMutableArray" id="8nX-oc-wEZ"/>
+                        <outletCollection property="scoreLabels" destination="QYR-Ey-Oxu" collectionClass="NSMutableArray" id="Xsq-rj-FVT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
