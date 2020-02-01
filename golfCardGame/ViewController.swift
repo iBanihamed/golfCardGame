@@ -9,7 +9,7 @@
 import UIKit
 import CRNotifications
 
-class ViewController: UIViewController, CardCellDelegate {
+class ViewController: UIViewController {
     
     @IBOutlet weak var dealButton: UIButton!
     @IBOutlet weak var flipCardButton: UIButton!
@@ -282,6 +282,14 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
         }
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
+        cell.card = players[collectionView.tag].hand.card[indexPath.item]
+        cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+        flipCard(player: collectionView.tag, card: indexPath.item)
+        aiTurns()
     }
     
 }

@@ -23,22 +23,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="85" height="139"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
-                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bxe-CU-piT">
-                        <rect key="frame" x="0.0" y="0.0" width="85" height="139"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <state key="normal" title="Button">
-                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </state>
-                        <connections>
-                            <action selector="cardButtonPressed:" destination="gTV-IL-0wX" eventType="touchUpInside" id="TIh-LP-RFf"/>
-                        </connections>
-                    </button>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="291" height="574"/>
             <connections>
-                <outlet property="cardButton" destination="Bxe-CU-piT" id="7pL-pz-Txi"/>
                 <outlet property="imageView" destination="wXX-2L-96k" id="Kc6-8M-hUM"/>
             </connections>
             <point key="canvasLocation" x="-305.07246376811594" y="15.066964285714285"/>
