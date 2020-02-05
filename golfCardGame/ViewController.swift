@@ -12,7 +12,6 @@ import CRNotifications
 class ViewController: UIViewController {
     
     @IBOutlet weak var dealButton: UIButton!
-    @IBOutlet weak var flipCardButton: UIButton!
     @IBOutlet weak var playerSlider: UISlider!
     
     @IBOutlet var cardCollectionViews: [UICollectionView]!
@@ -31,6 +30,7 @@ class ViewController: UIViewController {
     var players: Array = [Player]()
     var deck = Deck()
     var cardToTrade = 0
+    var tradingCard = false
     let MAX_PLAYERS = 4
     let MAX_CARDS = 4
     let semaphore = DispatchSemaphore(value: 1)
@@ -43,7 +43,6 @@ class ViewController: UIViewController {
         dealButton.isEnabled = true
         dealtPileButton.isEnabled = false
         deckButton.isEnabled = false
-        flipCardButton.isEnabled = false
         playersPlayingLabel.text = "Players: \(numberOfPlayers)"
         for item in cardCollectionViews {
             item.isHidden = true
@@ -122,8 +121,6 @@ class ViewController: UIViewController {
         }
         dealButton.isEnabled = false
         dealButton.isHidden = true
-        flipCardButton.isEnabled = true
-        flipCardButton.isHidden = false
         dealtPileButton.isEnabled = true
         deckButton.isEnabled = true
         playerSlider.isEnabled = false
@@ -133,28 +130,13 @@ class ViewController: UIViewController {
         //gameStart(playerCount: players.count)
     }
     
-    @IBAction func flipCardPressed(_ sender: Any) {
-        let cardToFlip = 0 //need to change code to accept user input for card to trad
-        flipCard(player: 0, card: cardToFlip)
-        deckButton.isEnabled = false
-        dealtPileButton.isEnabled = false
-        flipCardButton.isEnabled = false
-        aiTurns()
-    }
-    
-    
     @IBAction func deckCardButtonPressed(_ sender: Any) {
         drawCard()
     }
     
     //action to trade Card
     @IBAction func dealtPileButtonPressed(_ sender: Any) {
-        let cardToTrade = 0 //need to change code to accept user input for card to trade
-        tradeCard(player: 0, card: cardToTrade)
-        deckButton.isEnabled = false
-        dealtPileButton.isEnabled = false
-        flipCardButton.isEnabled = false
-        aiTurns()
+        tradingCard = true
     }
     func drawCard() {
         dealtPile.enqueue(deck.dealCard()!)
@@ -183,16 +165,16 @@ class ViewController: UIViewController {
         if highLight {
             for card in 0...MAX_CARDS - 1 {
                 if (players[0].hand.flipped[card] == false) {
-                    playerCells[card].cardButton.isEnabled = true
-                    playerCells[card].backgroundColor = UIColor.blue
+                    //playerCells[card].cardButton.isEnabled = true
+                    //playerCells[card].backgroundColor = UIColor.blue
                     //cardCollectionViews[0].cellForItem(at: IndexPath(item: card, section: 0))?.backgroundColor = UIColor.blue
                 }
             }
         } else {
             for card in 0...MAX_CARDS - 1 {
                 if (players[0].hand.flipped[card] == false) {
-                    playerCells[card].cardButton.isEnabled = false
-                    playerCells[card].backgroundColor = UIColor.clear
+                    //playerCells[card].cardButton.isEnabled = false
+                    //playerCells[card].backgroundColor = UIColor.clear
                     //cardCollectionViews[0].cellForItem(at: IndexPath(item: card, section: 0))?.backgroundColor = UIColor.clear
                 }
             }
@@ -222,7 +204,6 @@ class ViewController: UIViewController {
         }
         deckButton.isEnabled = true
         dealtPileButton.isEnabled = true
-        flipCardButton.isEnabled = true
         (checkGame()) ? endGame() : print("your turn")
     }
     
@@ -255,8 +236,6 @@ class ViewController: UIViewController {
         playerSlider.isHidden = false
         deckButton.isEnabled = false
         dealtPileButton.isEnabled = false
-        flipCardButton.isEnabled = false
-        flipCardButton.isHidden = true
         playersPlayingLabel.isHidden = false
     }
     
@@ -286,9 +265,18 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
-        cell.card = players[collectionView.tag].hand.card[indexPath.item]
-        cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
-        flipCard(player: collectionView.tag, card: indexPath.item)
+        if (tradingCard == true) {
+            tradeCard(player: collectionView.tag, card: indexPath.item)
+            cell.card = players[collectionView.tag].hand.card[indexPath.item]
+            cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+            tradingCard = false
+        } else {
+            cell.card = players[collectionView.tag].hand.card[indexPath.item]
+            cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+            flipCard(player: collectionView.tag, card: indexPath.item)
+        }
+        deckButton.isEnabled = false
+        dealtPileButton.isEnabled = false
         aiTurns()
     }
     

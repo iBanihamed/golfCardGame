@@ -143,17 +143,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yr5-Zg-5ti">
-                                <rect key="frame" x="312" y="537" width="93" height="49"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.58081901069999997" green="0.088427625600000004" blue="0.31863921880000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Flip Card">
-                                    <color key="titleColor" red="0.096103177159999997" green="0.12116903330000001" blue="0.4656560421" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                </state>
-                                <connections>
-                                    <action selector="flipCardPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wlN-7l-jXl"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QV0-Uj-mQZ">
                                 <rect key="frame" x="150" y="229" width="117" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -205,7 +194,6 @@
                         <outlet property="dealButton" destination="NfK-T7-ace" id="v0d-NA-qyA"/>
                         <outlet property="dealtPileButton" destination="mJv-xg-oRC" id="79y-ue-Neo"/>
                         <outlet property="deckButton" destination="Uze-K5-chu" id="aVG-lH-WjB"/>
-                        <outlet property="flipCardButton" destination="Yr5-Zg-5ti" id="Xyv-ke-gRf"/>
                         <outlet property="playerSlider" destination="Sb0-sm-8Qq" id="lJd-vh-Axs"/>
                         <outlet property="playersPlayingLabel" destination="vte-l5-JL8" id="kYT-7G-xnl"/>
                         <outletCollection property="cardCollectionViews" destination="O4R-nY-gUy" collectionClass="NSMutableArray" id="BRh-9w-Tb4"/>
