@@ -137,6 +137,10 @@ class ViewController: UIViewController {
     //action to trade Card
     @IBAction func dealtPileButtonPressed(_ sender: Any) {
         tradingCard = true
+//        UIView.animate(withDuration: 2.0, animations: {
+//                self.dealtPileButton.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+//            })
+        highlightCards(highLight: true)
     }
     func drawCard() {
         dealtPile.enqueue(deck.dealCard()!)
@@ -150,7 +154,6 @@ class ViewController: UIViewController {
         scoreLabels[player].text = "Score: \(players[player].calculateScore())"
         dealtPileButton.setImage(UIImage(named: dealtPile.peek()!.image), for: UIControl.State.normal)
         cardCollectionViews[player].reloadData()
-        
     }
     func flipCard(player: Int, card: Int) {
         players[player].hand.flipped[card] = true
@@ -165,17 +168,14 @@ class ViewController: UIViewController {
         if highLight {
             for card in 0...MAX_CARDS - 1 {
                 if (players[0].hand.flipped[card] == false) {
-                    //playerCells[card].cardButton.isEnabled = true
-                    //playerCells[card].backgroundColor = UIColor.blue
-                    //cardCollectionViews[0].cellForItem(at: IndexPath(item: card, section: 0))?.backgroundColor = UIColor.blue
+                    cardCollectionViews[0].cellForItem(at: IndexPath(item: card, section: 0))?.backgroundColor = UIColor.blue
                 }
             }
         } else {
             for card in 0...MAX_CARDS - 1 {
                 if (players[0].hand.flipped[card] == false) {
-                    //playerCells[card].cardButton.isEnabled = false
-                    //playerCells[card].backgroundColor = UIColor.clear
-                    //cardCollectionViews[0].cellForItem(at: IndexPath(item: card, section: 0))?.backgroundColor = UIColor.clear
+                    playerCells[card].backgroundColor = UIColor.clear
+                    cardCollectionViews[0].cellForItem(at: IndexPath(item: card, section: 0))?.backgroundColor = UIColor.clear
                 }
             }
         }
@@ -266,9 +266,13 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
         if (tradingCard == true) {
+//            UIView.animate(withDuration: 2.0, animations: {
+//                self.dealtPileButton.center = CGPoint(x: cell.frame.origin.x, y: cell.frame.origin.y)
+//            })
             tradeCard(player: collectionView.tag, card: indexPath.item)
             cell.card = players[collectionView.tag].hand.card[indexPath.item]
             cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+            highlightCards(highLight: false)
             tradingCard = false
         } else {
             cell.card = players[collectionView.tag].hand.card[indexPath.item]
