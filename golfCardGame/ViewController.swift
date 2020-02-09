@@ -137,9 +137,9 @@ class ViewController: UIViewController {
     //action to trade Card
     @IBAction func dealtPileButtonPressed(_ sender: Any) {
         tradingCard = true
-//        UIView.animate(withDuration: 2.0, animations: {
-//                self.dealtPileButton.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-//            })
+        UIView.animate(withDuration: 2.0, animations: {
+                self.dealtPileButton.transform = CGAffineTransform(scaleX: 1.15, y: 1.15)
+        })
         highlightCards(highLight: true)
     }
     func drawCard() {
@@ -265,23 +265,49 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
+        var animation_duration = 0
         if (tradingCard == true) {
-//            UIView.animate(withDuration: 2.0, animations: {
-//                self.dealtPileButton.center = CGPoint(x: cell.frame.origin.x, y: cell.frame.origin.y)
-//            })
-            tradeCard(player: collectionView.tag, card: indexPath.item)
-            cell.card = players[collectionView.tag].hand.card[indexPath.item]
-            cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+            let dealtPileRect = dealtPileButton.frame
+            let myRect = cell.frame
+            let originInRootView = self.cardCollectionViews[collectionView.tag].convert(myRect.origin, to: self.view)
+            //resize dealt card to cell size and move to position of cell
+            UIView.animate(withDuration: 2.0, animations: {
+                self.dealtPileButton.frame = CGRect(x: originInRootView.x, y: originInRootView.y, width: myRect.width, height: myRect.height)
+            })
+            animation_duration += 2
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+                self.tradeCard(player: collectionView.tag, card: indexPath.item)
+                cell.card = self.players[collectionView.tag].hand.card[indexPath.item]
+                UIView.animate(withDuration: 2.0, animations: {
+                    self.dealtPileButton.frame = CGRect(x: dealtPileRect.origin.x, y: dealtPileRect.origin.y, width: dealtPileRect.width, height: dealtPileRect.height)
+                })
+            })
+            animation_duration += 2
+            //move dealtCard to position of cell
+
+            //make dealtCard invisible before moving back to original position
+            //move dealtCardback to original position
+//            UIView.transition(with: cell.imageView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
+//                    cell.imageView.image = UIImage(named: self.players[collectionView.tag].hand.card[indexPath.item].image)
+//                }, completion: nil)
             highlightCards(highLight: false)
             tradingCard = false
         } else {
             cell.card = players[collectionView.tag].hand.card[indexPath.item]
-            cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
-            flipCard(player: collectionView.tag, card: indexPath.item)
+            //cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+                UIView.transition(with: cell.imageView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
+                    cell.imageView.image = UIImage(named: self.players[collectionView.tag].hand.card[indexPath.item].image)
+                }, completion: nil)
+                self.flipCard(player: collectionView.tag, card: indexPath.item)
+            })
         }
-        deckButton.isEnabled = false
-        dealtPileButton.isEnabled = false
-        aiTurns()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(animation_duration), execute: {
+            self.deckButton.isEnabled = false
+            self.dealtPileButton.isEnabled = false
+            self.aiTurns()
+        })
+        animation_duration = 0
     }
     
 }
