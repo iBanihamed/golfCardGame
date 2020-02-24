@@ -14,13 +14,13 @@ class Player {
     let isAI: Bool
     var score: Int
     var done: Bool
-    var hand: (card: [Card], flipped: [Bool])
+    var hand: (card: [Card], flipped: [Bool], flipping: [Bool])
     
     init(l: String, pn: Int) {
         location = l
         playerNumber = pn
         isAI = (pn == 0) ? false : true
-        hand = ([Card](repeating: Card(r: Card.Rank(rawValue: 2)!, s: Card.Suit(rawValue: "spades")!), count: 4), [Bool](repeating: false, count: 4))
+        hand = ([Card](repeating: Card(r: Card.Rank(rawValue: 2)!, s: Card.Suit(rawValue: "spades")!), count: 4), [Bool](repeating: false, count: 4), [Bool](repeating: false, count: 4))
         done = false
         score = 0
     }

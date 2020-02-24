@@ -33,7 +33,6 @@ class ViewController: UIViewController {
     var tradingCard = false
     let MAX_PLAYERS = 4
     let MAX_CARDS = 4
-    let semaphore = DispatchSemaphore(value: 1)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -133,14 +132,21 @@ class ViewController: UIViewController {
     @IBAction func deckCardButtonPressed(_ sender: Any) {
         drawCard()
     }
-    
     //action to trade Card
     @IBAction func dealtPileButtonPressed(_ sender: Any) {
         tradingCard = true
         UIView.animate(withDuration: 2.0, animations: {
-                self.dealtPileButton.transform = CGAffineTransform(scaleX: 1.15, y: 1.15)
+            var i = 0
+            for cell in self.cardCollectionViews[0].visibleCells {
+                if self.players[0].hand.flipped[i] == false {
+                    cell.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                    cell.layer.borderColor = UIColor.blue.cgColor
+                    cell.layer.borderWidth = 2.0
+                }
+                i += 1
+            }
         })
-        highlightCards(highLight: true)
+        //highlightCards(highLight: true)
     }
     func drawCard() {
         dealtPile.enqueue(deck.dealCard()!)
@@ -156,9 +162,11 @@ class ViewController: UIViewController {
         cardCollectionViews[player].reloadData()
     }
     func flipCard(player: Int, card: Int) {
+        players[player].hand.flipping[card] = true
         players[player].hand.flipped[card] = true
         scoreLabels[player].text = "Score: \(players[player].calculateScore())"
         cardCollectionViews[player].reloadData()
+        players[player].hand.flipping[card] = false
     }
     func highlightCards(highLight: Bool) {
         var playerCells = [PlayerCardCollectionViewCell]()
@@ -251,20 +259,30 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
         //cell.imageView.image = (players.isEmpty == true) ? UIImage(named: "back"): UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
         //set image of card
+        cell.imageView.contentMode = UIView.ContentMode.scaleToFill
         if (players.isEmpty == true) {
             cell.imageView.image = UIImage(named: "back")
         } else if (players[collectionView.tag].hand.flipped[indexPath.item] == false) {
             cell.card = players[collectionView.tag].hand.card[indexPath.item]
             cell.imageView.image = UIImage(named: "back")
         } else {
-            cell.card = players[collectionView.tag].hand.card[indexPath.item]
-            cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+            if players[collectionView.tag].hand.flipping[indexPath.item] == true {
+                cell.card = players[collectionView.tag].hand.card[indexPath.item]
+                UIView.transition(with: cell.imageView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
+                    cell.imageView.image = UIImage(named: self.players[collectionView.tag].hand.card[indexPath.item].image)
+                }, completion: nil)
+            } else {
+                cell.card = players[collectionView.tag].hand.card[indexPath.item]
+                cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+            }
         }
+        cell.backgroundColor = UIColor.white
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
+        cell.beingFlipped = true
         var animation_duration = 0
         if (tradingCard == true) {
             let dealtPileRect = dealtPileButton.frame
@@ -274,7 +292,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             UIView.animate(withDuration: 2.0, animations: {
                 self.dealtPileButton.frame = CGRect(x: originInRootView.x, y: originInRootView.y, width: myRect.width, height: myRect.height)
             })
-            animation_duration += 2
+            //return the dealtpilebutton back to its original coordinates
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
                 self.tradeCard(player: collectionView.tag, card: indexPath.item)
                 cell.card = self.players[collectionView.tag].hand.card[indexPath.item]
@@ -282,25 +300,22 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
                     self.dealtPileButton.frame = CGRect(x: dealtPileRect.origin.x, y: dealtPileRect.origin.y, width: dealtPileRect.width, height: dealtPileRect.height)
                 })
             })
-            animation_duration += 2
-            //move dealtCard to position of cell
-
-            //make dealtCard invisible before moving back to original position
-            //move dealtCardback to original position
-//            UIView.transition(with: cell.imageView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
-//                    cell.imageView.image = UIImage(named: self.players[collectionView.tag].hand.card[indexPath.item].image)
-//                }, completion: nil)
-            highlightCards(highLight: false)
+            animation_duration += 4
+            for c in self.cardCollectionViews[0].visibleCells {
+                c.layer.borderWidth = 0
+                c.layer.borderColor = UIColor.clear.cgColor
+            }
             tradingCard = false
         } else {
             cell.card = players[collectionView.tag].hand.card[indexPath.item]
-            //cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+            //self.flipCard(player: collectionView.tag, card: indexPath.item)
+            UIView.transition(with: cell.imageView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
+                cell.imageView.image = UIImage(named: self.players[collectionView.tag].hand.card[indexPath.item].image)
+            }, completion: nil)
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
-                UIView.transition(with: cell.imageView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
-                    cell.imageView.image = UIImage(named: self.players[collectionView.tag].hand.card[indexPath.item].image)
-                }, completion: nil)
                 self.flipCard(player: collectionView.tag, card: indexPath.item)
             })
+            animation_duration += 2
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(animation_duration), execute: {
             self.deckButton.isEnabled = false
@@ -309,6 +324,4 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         })
         animation_duration = 0
     }
-    
 }
-

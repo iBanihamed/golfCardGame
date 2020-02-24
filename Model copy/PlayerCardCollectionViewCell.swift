@@ -11,6 +11,7 @@ import UIKit
 class PlayerCardCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var imageView: UIImageView!
+    var beingFlipped = false
     var card = Card(r: Card.Rank(rawValue: 2)!, s: Card.Suit(rawValue: "spades")!)
     
     override func awakeFromNib() {
