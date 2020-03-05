@@ -186,6 +186,10 @@
                                     <action selector="dealtPileButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vh5-H2-hbz"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="baO-MI-UFS">
+                                <rect key="frame" x="94" y="303" width="97" height="170"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.56284224989999998" blue="0.31881666180000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -193,6 +197,7 @@
                     <connections>
                         <outlet property="dealButton" destination="NfK-T7-ace" id="v0d-NA-qyA"/>
                         <outlet property="dealtPileButton" destination="mJv-xg-oRC" id="79y-ue-Neo"/>
+                        <outlet property="deckBackgroundImage" destination="baO-MI-UFS" id="4GL-mN-6K2"/>
                         <outlet property="deckButton" destination="Uze-K5-chu" id="aVG-lH-WjB"/>
                         <outlet property="playerSlider" destination="Sb0-sm-8Qq" id="lJd-vh-Axs"/>
                         <outlet property="playersPlayingLabel" destination="vte-l5-JL8" id="kYT-7G-xnl"/>

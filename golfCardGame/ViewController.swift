@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var dealtPileButton: UIButton!
     @IBOutlet weak var deckButton: UIButton!
+    @IBOutlet weak var deckBackgroundImage: UIImageView!
     
     @IBOutlet weak var playersPlayingLabel: UILabel!
     
@@ -42,6 +43,8 @@ class ViewController: UIViewController {
         dealButton.isEnabled = true
         dealtPileButton.isEnabled = false
         deckButton.isEnabled = false
+        deckBackgroundImage.image = UIImage(named: "back")
+        deckBackgroundImage.frame = deckButton.frame
         playersPlayingLabel.text = "Players: \(numberOfPlayers)"
         for item in cardCollectionViews {
             item.isHidden = true
@@ -95,7 +98,7 @@ class ViewController: UIViewController {
         dealtPile.empty()
         dealtPile.enqueue(deck.dealCard()!)
         dealtPileButton.setImage(UIImage(named: dealtPile.peek()!.image), for: UIControl.State.normal)
-        
+        dealtPileButton.backgroundColor = UIColor.white
         for i in 0...(numberOfPlayers - 1) {
             players.append(Player(l: "USA", pn: i))
         }
@@ -130,10 +133,23 @@ class ViewController: UIViewController {
     }
     
     @IBAction func deckCardButtonPressed(_ sender: Any) {
-        drawCard()
+        let orgRect = deckButton.frame
+        view.bringSubviewToFront(deckButton)
+        UIView.animate(withDuration: 1.0, animations: {
+            UIView.transition(with: self.deckButton.imageView!, duration: 1.0, options: .transitionFlipFromLeft, animations: {
+                self.deckButton.setImage(UIImage(named: self.deck.peek()!.image), for: UIControl.State.normal)
+            }, completion: nil)
+            self.deckButton.frame = CGRect(x: self.dealtPileButton.frame.origin.x, y: self.dealtPileButton.frame.origin.y, width: self.dealtPileButton.frame.width, height: self.dealtPileButton.frame.height)
+        })
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+            self.drawCard()
+            self.deckButton.frame = CGRect(x: orgRect.origin.x, y: orgRect.origin.y, width: orgRect.width, height: orgRect.height)
+            self.deckButton.setImage(UIImage(named: "back"), for: UIControl.State.normal)
+        })
     }
     //action to trade Card
     @IBAction func dealtPileButtonPressed(_ sender: Any) {
+        view.bringSubviewToFront(dealtPileButton)
         tradingCard = true
         UIView.animate(withDuration: 2.0, animations: {
             var i = 0
@@ -263,8 +279,13 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         if (players.isEmpty == true) {
             cell.imageView.image = UIImage(named: "back")
         } else if (players[collectionView.tag].hand.flipped[indexPath.item] == false) {
-            cell.card = players[collectionView.tag].hand.card[indexPath.item]
-            cell.imageView.image = UIImage(named: "back")
+            if (collectionView.tag == 0 && (indexPath.item == 2 || indexPath.item == 3)) {
+                cell.card = players[collectionView.tag].hand.card[indexPath.item]
+                cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+            } else {
+                cell.card = players[collectionView.tag].hand.card[indexPath.item]
+                cell.imageView.image = UIImage(named: "back")
+            }
         } else {
             if players[collectionView.tag].hand.flipping[indexPath.item] == true {
                 cell.card = players[collectionView.tag].hand.card[indexPath.item]
