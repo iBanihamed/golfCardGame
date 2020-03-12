@@ -32,6 +32,7 @@ class ViewController: UIViewController {
     var deck = Deck()
     var cardToTrade = 0
     var tradingCard = false
+    var drewCard = false;
     let MAX_PLAYERS = 4
     let MAX_CARDS = 4
     
@@ -46,6 +47,8 @@ class ViewController: UIViewController {
         deckBackgroundImage.image = UIImage(named: "back")
         deckBackgroundImage.frame = deckButton.frame
         playersPlayingLabel.text = "Players: \(numberOfPlayers)"
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
+        //self.view.contentMode = UIView.ContentMode.scaleAspectFit
         for item in cardCollectionViews {
             item.isHidden = true
         }
@@ -99,6 +102,7 @@ class ViewController: UIViewController {
         dealtPile.enqueue(deck.dealCard()!)
         dealtPileButton.setImage(UIImage(named: dealtPile.peek()!.image), for: UIControl.State.normal)
         dealtPileButton.backgroundColor = UIColor.white
+        drewCard = false
         for i in 0...(numberOfPlayers - 1) {
             players.append(Player(l: "USA", pn: i))
         }
@@ -107,7 +111,10 @@ class ViewController: UIViewController {
             for i in 0...MAX_CARDS - 1 {
                 player.hand.card[i] = deck.dealCard()!
             }
+            cardCollectionViews[p].isScrollEnabled = false
             cardCollectionViews[p].isHidden = false
+            cardCollectionViews[p].layer.borderWidth = 2.0
+            cardCollectionViews[p].layer.borderColor = UIColor.white.cgColor
             cardCollectionViews[p].isUserInteractionEnabled = (p > 0) ? false : true //disabling user actions on cpu collection views/cards
             cardCollectionViews[p].reloadData()
             p += 1
@@ -133,19 +140,24 @@ class ViewController: UIViewController {
     }
     
     @IBAction func deckCardButtonPressed(_ sender: Any) {
-        let orgRect = deckButton.frame
-        view.bringSubviewToFront(deckButton)
-        UIView.animate(withDuration: 1.0, animations: {
-            UIView.transition(with: self.deckButton.imageView!, duration: 1.0, options: .transitionFlipFromLeft, animations: {
-                self.deckButton.setImage(UIImage(named: self.deck.peek()!.image), for: UIControl.State.normal)
-            }, completion: nil)
-            self.deckButton.frame = CGRect(x: self.dealtPileButton.frame.origin.x, y: self.dealtPileButton.frame.origin.y, width: self.dealtPileButton.frame.width, height: self.dealtPileButton.frame.height)
-        })
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-            self.drawCard()
-            self.deckButton.frame = CGRect(x: orgRect.origin.x, y: orgRect.origin.y, width: orgRect.width, height: orgRect.height)
-            self.deckButton.setImage(UIImage(named: "back"), for: UIControl.State.normal)
-        })
+        if (drewCard == true) {
+            CRNotifications.showNotification(type: CRNotifications.info, title: "✋", message: "Hold it there bud", dismissDelay: 1)
+        } else {
+            let orgRect = deckButton.frame
+            view.bringSubviewToFront(deckButton)
+            UIView.animate(withDuration: 1.0, animations: {
+                UIView.transition(with: self.deckButton.imageView!, duration: 1.0, options: .transitionFlipFromLeft, animations: {
+                    self.deckButton.setImage(UIImage(named: self.deck.peek()!.image), for: UIControl.State.normal)
+                }, completion: nil)
+                self.deckButton.frame = CGRect(x: self.dealtPileButton.frame.origin.x, y: self.dealtPileButton.frame.origin.y, width: self.dealtPileButton.frame.width, height: self.dealtPileButton.frame.height)
+            })
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                self.drawCard()
+                self.deckButton.frame = CGRect(x: orgRect.origin.x, y: orgRect.origin.y, width: orgRect.width, height: orgRect.height)
+                self.deckButton.setImage(UIImage(named: "back"), for: UIControl.State.normal)
+            })
+            drewCard = true
+        }
     }
     //action to trade Card
     @IBAction func dealtPileButtonPressed(_ sender: Any) {
@@ -156,7 +168,7 @@ class ViewController: UIViewController {
             for cell in self.cardCollectionViews[0].visibleCells {
                 if self.players[0].hand.flipped[i] == false {
                     cell.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-                    cell.layer.borderColor = UIColor.blue.cgColor
+                    cell.layer.borderColor = UIColor.yellow.cgColor
                     cell.layer.borderWidth = 2.0
                 }
                 i += 1
@@ -207,6 +219,8 @@ class ViewController: UIViewController {
     func aiTurns() {
         for i in 1...players.count - 1 {
             if (dealtPile.peek()?.rank.rankDescription() == "king") {
+                //let indexPath = self.collectionView.indexPathsForSelectedItems?.last ?? IndexPath(item: 0, section: 0)
+                //self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
                 tradeCard(player: i, card: players[i].worstCard())
                 print("card traded")
             } else {
@@ -270,6 +284,12 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         return MAX_CARDS
         //return players[0].hand.card.count
     }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        //let imgWidth = CGRectGetWidth(collectionView.frame)/3.0
+        let imgWidth = collectionView.frame.width
+        return CGSize(width: imgWidth, height: imgWidth)
+    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
@@ -278,6 +298,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         cell.imageView.contentMode = UIView.ContentMode.scaleToFill
         if (players.isEmpty == true) {
             cell.imageView.image = UIImage(named: "back")
+            cell.layer.borderColor = UIColor.blue.cgColor
+            cell.layer.borderWidth = 2.0
         } else if (players[collectionView.tag].hand.flipped[indexPath.item] == false) {
             if (collectionView.tag == 0 && (indexPath.item == 2 || indexPath.item == 3)) {
                 cell.card = players[collectionView.tag].hand.card[indexPath.item]
@@ -286,6 +308,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
                 cell.card = players[collectionView.tag].hand.card[indexPath.item]
                 cell.imageView.image = UIImage(named: "back")
             }
+            cell.layer.borderColor = UIColor.blue.cgColor
+            cell.layer.borderWidth = 2.0
         } else {
             if players[collectionView.tag].hand.flipping[indexPath.item] == true {
                 cell.card = players[collectionView.tag].hand.card[indexPath.item]
@@ -295,8 +319,11 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             } else {
                 cell.card = players[collectionView.tag].hand.card[indexPath.item]
                 cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+                cell.layer.borderColor = UIColor.red.cgColor
+                cell.layer.borderWidth = 2.0
             }
         }
+        cell.imageView.contentMode = UIView.ContentMode.scaleAspectFit
         cell.backgroundColor = UIColor.white
         return cell
     }
@@ -322,10 +349,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
                 })
             })
             animation_duration += 4
-            for c in self.cardCollectionViews[0].visibleCells {
-                c.layer.borderWidth = 0
-                c.layer.borderColor = UIColor.clear.cgColor
-            }
             tradingCard = false
         } else {
             cell.card = players[collectionView.tag].hand.card[indexPath.item]
@@ -342,6 +365,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             self.deckButton.isEnabled = false
             self.dealtPileButton.isEnabled = false
             self.aiTurns()
+            self.drewCard = false
         })
         animation_duration = 0
     }
