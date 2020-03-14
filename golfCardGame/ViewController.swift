@@ -181,7 +181,26 @@ class ViewController: UIViewController {
         dealtPileButton.setImage(UIImage(named: dealtPile.peek()!.image), for: UIControl.State.normal)
     }
     func tradeCard(player: Int, card: Int) {
-        let cardToTrade = players[player].hand.card[card]
+        let indexPath = IndexPath(item: card, section: 0)
+        let cell = cardCollectionViews[player].cellForItem(at: indexPath)
+        let cellRect = cell!.frame
+        let dealtPileRect = dealtPileButton.frame
+        let originInRootView = cardCollectionViews[player].convert(cellRect.origin, to: self.view)
+        //resize dealt card to cell size and move to position of cell
+        UIView.animate(withDuration: 2.0, animations: {
+            self.dealtPileButton.frame = CGRect(x: originInRootView.x, y: originInRootView.y, width: cellRect.width, height: cellRect.height)
+        })
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+            let cellV = self.cardCollectionViews[player].dequeueReusableCell(withReuseIdentifier: self.cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
+            self.trade(player: player, card: indexPath.item)
+            cellV.card = self.players[player].hand.card[indexPath.item]
+            UIView.animate(withDuration: 2.0, animations: {
+                self.dealtPileButton.frame = CGRect(x: dealtPileRect.origin.x, y: dealtPileRect.origin.y, width: dealtPileRect.width, height: dealtPileRect.height)
+            })
+        })
+    }
+    func trade(player: Int, card: Int) {
+        let cardToTrade = self.players[player].hand.card[card]
         players[player].hand.card[card] = dealtPile.dealCard()!
         dealtPile.enqueue(cardToTrade)
         players[player].hand.flipped[card] = true
@@ -190,6 +209,12 @@ class ViewController: UIViewController {
         cardCollectionViews[player].reloadData()
     }
     func flipCard(player: Int, card: Int) {
+        let indexPath = IndexPath(item: card, section: 0)
+        //var cell = cardCollectionViews[player].cellForItem(at: indexPath)
+        let cell = cardCollectionViews[player].dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
+        UIView.transition(with: cell.imageView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
+            cell.imageView.image = UIImage(named: self.players[player].hand.card[indexPath.item].image)
+        }, completion: nil)
         players[player].hand.flipping[card] = true
         players[player].hand.flipped[card] = true
         scoreLabels[player].text = "Score: \(players[player].calculateScore())"
@@ -333,33 +358,26 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         cell.beingFlipped = true
         var animation_duration = 0
         if (tradingCard == true) {
-            let dealtPileRect = dealtPileButton.frame
-            let myRect = cell.frame
-            let originInRootView = self.cardCollectionViews[collectionView.tag].convert(myRect.origin, to: self.view)
-            //resize dealt card to cell size and move to position of cell
-            UIView.animate(withDuration: 2.0, animations: {
-                self.dealtPileButton.frame = CGRect(x: originInRootView.x, y: originInRootView.y, width: myRect.width, height: myRect.height)
-            })
-            //return the dealtpilebutton back to its original coordinates
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
-                self.tradeCard(player: collectionView.tag, card: indexPath.item)
-                cell.card = self.players[collectionView.tag].hand.card[indexPath.item]
-                UIView.animate(withDuration: 2.0, animations: {
-                    self.dealtPileButton.frame = CGRect(x: dealtPileRect.origin.x, y: dealtPileRect.origin.y, width: dealtPileRect.width, height: dealtPileRect.height)
-                })
-            })
+            self.tradeCard(player: collectionView.tag, card: indexPath.item)
+//            let dealtPileRect = dealtPileButton.frame
+//            let myRect = cell.frame
+//            let originInRootView = self.cardCollectionViews[collectionView.tag].convert(myRect.origin, to: self.view)
+//            //resize dealt card to cell size and move to position of cell
+//            UIView.animate(withDuration: 2.0, animations: {
+//                self.dealtPileButton.frame = CGRect(x: originInRootView.x, y: originInRootView.y, width: myRect.width, height: myRect.height)
+//            })
+//            //return the dealtpilebutton back to its original coordinates
+//            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+//                self.tradeCard(player: collectionView.tag, card: indexPath.item)
+//                cell.card = self.players[collectionView.tag].hand.card[indexPath.item]
+//                UIView.animate(withDuration: 2.0, animations: {
+//                    self.dealtPileButton.frame = CGRect(x: dealtPileRect.origin.x, y: dealtPileRect.origin.y, width: dealtPileRect.width, height: dealtPileRect.height)
+//                })
+//            })
             animation_duration += 4
             tradingCard = false
         } else {
-            cell.card = players[collectionView.tag].hand.card[indexPath.item]
-            //self.flipCard(player: collectionView.tag, card: indexPath.item)
-            UIView.transition(with: cell.imageView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
-                cell.imageView.image = UIImage(named: self.players[collectionView.tag].hand.card[indexPath.item].image)
-            }, completion: nil)
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
-                self.flipCard(player: collectionView.tag, card: indexPath.item)
-            })
-            animation_duration += 2
+            self.flipCard(player: collectionView.tag, card: indexPath.item)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(animation_duration), execute: {
             self.deckButton.isEnabled = false
