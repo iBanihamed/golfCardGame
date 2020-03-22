@@ -356,8 +356,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
         cell.imageView.contentMode = UIView.ContentMode.scaleToFill
         if (players.isEmpty == true) {
-            cell.layer.borderColor = UIColor.blue.cgColor
-            cell.layer.borderWidth = 2.0
+            return cell
+//            cell.layer.borderColor = UIColor.blue.cgColor
+//            cell.layer.borderWidth = 2.0
         } else if (players[collectionView.tag].hand.flipped[indexPath.item] == false) {
             if (collectionView.tag == 0 && (indexPath.item == 2 || indexPath.item == 3)) {
                 cell.card = players[collectionView.tag].hand.card[indexPath.item]
@@ -391,8 +392,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             self.flipCard(player: collectionView.tag, card: indexPath.item)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(turn_duration), execute: {
-//            self.deckButton.isEnabled = false
-//            self.dealtPileButton.isEnabled = false
             self.aiTurns()
             self.drewCard = false
         })
