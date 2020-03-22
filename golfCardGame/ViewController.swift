@@ -33,8 +33,14 @@ class ViewController: UIViewController {
     var cardToTrade = 0
     var tradingCard = false
     var drewCard = false;
+    var cardsTraded = 0
+    var cardsDrawn = 0
+    var cardsFlipped = 0
     let MAX_PLAYERS = 4
     let MAX_CARDS = 4
+    let DRAW_CARD_DURATION = 1
+    let TRADE_CARD_DURATION = 2
+    let FLIP_CARD_DURATION = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,40 +98,19 @@ class ViewController: UIViewController {
     }
     
     @IBAction func dealPressed(_ sender: Any) {
-        players.removeAll()
-        deck.empty()
-        deck.generateDeck()
-        deck.shuffleDeck()
-        
-        dealtPile.empty()
-        dealtPile.enqueue(deck.dealCard()!)
-        dealtPileButton.setImage(UIImage(named: dealtPile.peek()!.image), for: UIControl.State.normal)
-        dealtPileButton.backgroundColor = UIColor.white
-        drewCard = false
-        for i in 0...(numberOfPlayers - 1) {
-            players.append(Player(l: "USA", pn: i))
-        }
-        var p = 0
-        for player in players {
-            for i in 0...MAX_CARDS - 1 {
-                player.hand.card[i] = deck.dealCard()!
+        clearPrevGame()
+        for player in 0...numberOfPlayers - 1 {
+            players.append(Player(l: "USA", pn: player))
+            for card in 0...MAX_CARDS - 1 {
+                players[player].hand.card[card] = deck.dealCard()!
             }
-            cardCollectionViews[p].isScrollEnabled = false
-            cardCollectionViews[p].isHidden = false
-            cardCollectionViews[p].layer.borderWidth = 2.0
-            cardCollectionViews[p].layer.borderColor = UIColor.white.cgColor
-            cardCollectionViews[p].isUserInteractionEnabled = (p > 0) ? false : true //disabling user actions on cpu collection views/cards
-            cardCollectionViews[p].reloadData()
-            p += 1
-        }
-        for i in 0...MAX_PLAYERS - 1 {
-            if i >= numberOfPlayers {
-                cardCollectionViews[i].isHidden = true
-                scoreLabels[i].text = ""
-            } else {
-                cardCollectionViews[i].isHidden = false
-                scoreLabels[i].text = "Score:"
-            }
+            cardCollectionViews[player].isScrollEnabled = false
+            cardCollectionViews[player].isHidden = false
+            cardCollectionViews[player].layer.borderWidth = 2.0
+            cardCollectionViews[player].layer.borderColor = UIColor.white.cgColor
+            cardCollectionViews[player].isUserInteractionEnabled = (player > 0) ? false : true //disabling user actions on cpu collection views/cards
+            scoreLabels[player].isHidden = false
+            scoreLabels[player].text = "Score:"
         }
         dealButton.isEnabled = false
         dealButton.isHidden = true
@@ -134,26 +119,74 @@ class ViewController: UIViewController {
         playerSlider.isEnabled = false
         playerSlider.isHidden = true
         playersPlayingLabel.isHidden = true
+        dealCards()
     }
     
+    func clearPrevGame() {
+        players.removeAll()
+        deck.empty()
+        deck.generateDeck()
+        deck.shuffleDeck()
+        
+        dealtPile.empty()
+        dealtPile.enqueue(deck.dealCard()!)
+        //dealtPileButton.setImage(UIImage(named: dealtPile.peek()!.image), for: UIControl.State.normal)
+        //dealtPileButton.backgroundColor = UIColor.white
+        drewCard = false
+        for player in 0...MAX_PLAYERS - 1 {
+            cardCollectionViews[player].isHidden = true
+            scoreLabels[player].isHidden = true
+        }
+    }
+    func dealCards() {
+        let deckButtonRect = deckButton.frame
+        UIView.animate(withDuration: 0.2, animations: {
+            self.deckButton.frame = CGRect(x: self.dealtPileButton.frame.origin.x, y: self.dealtPileButton.frame.origin.y, width: self.dealtPileButton.frame.width, height: self.dealtPileButton.frame.height)
+        }, completion: { (finished: Bool) in
+            self.dealtPileButton.setImage(UIImage(named: self.dealtPile.peek()!.image), for: UIControl.State.normal)
+            self.dealtPileButton.backgroundColor = UIColor.white
+            self.deckButton.frame = CGRect(x: deckButtonRect.origin.x, y: deckButtonRect.origin.y, width: deckButtonRect.width, height: deckButtonRect.height)
+            self.dealingCardsAnimation(player: 0, card: 0)
+        })
+    }
+    
+    func dealingCardsAnimation(player: Int, card: Int) {
+        if ((player <= numberOfPlayers - 1) && (card <= MAX_CARDS - 1)) {
+            var p = player
+            var c = card
+            let indexPath = IndexPath(item: card, section: 0)
+            let cell = cardCollectionViews[player].cellForItem(at: indexPath)
+            let cellV = self.cardCollectionViews[player].dequeueReusableCell(withReuseIdentifier: self.cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
+            let cellRect = cell!.frame
+            let deckRect = deckButton.frame
+            let originInRootView = cardCollectionViews[player].convert(cellRect.origin, to: self.view)
+            //resize deck card to cell size and move to position of cell and then return to original position
+            UIView.animate(withDuration: 0.2, animations: {
+                self.deckButton.frame = CGRect(x: originInRootView.x, y: originInRootView.y, width: cellRect.width, height: cellRect.height)
+            }, completion: { (finished: Bool) in
+                cell?.layer.backgroundColor = UIColor.white.cgColor
+                cellV.card = self.players[player].hand.card[card]
+                cellV.imageView.image = UIImage(named: self.players[player].hand.card[card].image)
+                self.cardCollectionViews[player].reloadItems(at: [indexPath])
+                self.deckButton.frame = CGRect(x: deckRect.origin.x, y: deckRect.origin.y, width: deckRect.width, height: deckRect.height)
+                if card == 3 {
+                    p += 1
+                    c = 0
+                } else {
+                    c += 1
+                }
+                self.dealingCardsAnimation(player: p, card: c)
+            })
+        } else {
+            print("Cards Dealt")
+        }
+    }
     @IBAction func deckCardButtonPressed(_ sender: Any) {
         if (drewCard == true) {
             CRNotifications.showNotification(type: CRNotifications.info, title: "✋", message: "Hold it there bud", dismissDelay: 1)
         } else {
-            let orgRect = deckButton.frame
-            view.bringSubviewToFront(deckButton)
-            UIView.animate(withDuration: 1.0, animations: {
-                UIView.transition(with: self.deckButton.imageView!, duration: 1.0, options: .transitionFlipFromLeft, animations: {
-                    self.deckButton.setImage(UIImage(named: self.deck.peek()!.image), for: UIControl.State.normal)
-                }, completion: nil)
-                self.deckButton.frame = CGRect(x: self.dealtPileButton.frame.origin.x, y: self.dealtPileButton.frame.origin.y, width: self.dealtPileButton.frame.width, height: self.dealtPileButton.frame.height)
-            })
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                self.drawCard()
-                self.deckButton.frame = CGRect(x: orgRect.origin.x, y: orgRect.origin.y, width: orgRect.width, height: orgRect.height)
-                self.deckButton.setImage(UIImage(named: "back"), for: UIControl.State.normal)
-            })
             drewCard = true
+            drawCard()
         }
     }
     //action to trade Card
@@ -172,22 +205,34 @@ class ViewController: UIViewController {
             }
         })
     }
+    
     func drawCard() {
-        dealtPile.enqueue(deck.dealCard()!)
-        dealtPileButton.setImage(UIImage(named: dealtPile.peek()!.image), for: UIControl.State.normal)
+        let orgRect = deckButton.frame
+        view.bringSubviewToFront(deckButton)
+        UIView.animate(withDuration: 1.0, animations: {
+            UIView.transition(with: self.deckButton.imageView!, duration: 1.0, options: .transitionFlipFromLeft, animations: {
+                self.deckButton.setImage(UIImage(named: self.deck.peek()!.image), for: UIControl.State.normal)
+            }, completion: nil)
+            self.deckButton.frame = CGRect(x: self.dealtPileButton.frame.origin.x, y: self.dealtPileButton.frame.origin.y, width: self.dealtPileButton.frame.width, height: self.dealtPileButton.frame.height)
+        }, completion: { (finished: Bool) in
+            self.dealtPile.enqueue(self.deck.dealCard()!)
+            self.dealtPileButton.setImage(UIImage(named: self.dealtPile.peek()!.image), for: UIControl.State.normal)
+            self.deckButton.frame = CGRect(x: orgRect.origin.x, y: orgRect.origin.y, width: orgRect.width, height: orgRect.height)
+            self.deckButton.setImage(UIImage(named: "back"), for: UIControl.State.normal)
+        })
     }
+    
     func tradeCard(player: Int, card: Int) {
         let indexPath = IndexPath(item: card, section: 0)
         let cell = cardCollectionViews[player].cellForItem(at: indexPath)
+        let cellV = cardCollectionViews[player].dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
         let cellRect = cell!.frame
         let dealtPileRect = dealtPileButton.frame
         let originInRootView = cardCollectionViews[player].convert(cellRect.origin, to: self.view)
-        //resize dealt card to cell size and move to position of cell
+        //resize dealt card to cell size and move to position of cell exchange cards and move dealt card back to original position
         UIView.animate(withDuration: 1.0, animations: {
             self.dealtPileButton.frame = CGRect(x: originInRootView.x, y: originInRootView.y, width: cellRect.width, height: cellRect.height)
-        })
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-            let cellV = self.cardCollectionViews[player].dequeueReusableCell(withReuseIdentifier: self.cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
+        }, completion: { (finished: Bool) in
             self.trade(player: player, card: indexPath.item)
             cellV.card = self.players[player].hand.card[indexPath.item]
             UIView.animate(withDuration: 1.0, animations: {
@@ -195,86 +240,73 @@ class ViewController: UIViewController {
             })
         })
     }
+    
     func trade(player: Int, card: Int) {
+        let indexPath = IndexPath(item: card, section: 0)
         let cardToTrade = self.players[player].hand.card[card]
         players[player].hand.card[card] = dealtPile.dealCard()!
         dealtPile.enqueue(cardToTrade)
         players[player].hand.flipped[card] = true
         scoreLabels[player].text = "Score: \(players[player].calculateScore())"
         dealtPileButton.setImage(UIImage(named: dealtPile.peek()!.image), for: UIControl.State.normal)
+        //cardCollectionViews[player].reloadItems(at: [indexPath])
         cardCollectionViews[player].reloadData()
     }
+    
     func flipCard(player: Int, card: Int) {
         let indexPath = IndexPath(item: card, section: 0)
         let cell = cardCollectionViews[player].dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
-        UIView.transition(with: cell.imageView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
+        UIView.transition(with: cell.contentView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
             cell.imageView.image = UIImage(named: self.players[player].hand.card[indexPath.item].image)
         }, completion: nil)
-        players[player].hand.flipping[card] = true
         players[player].hand.flipped[card] = true
         scoreLabels[player].text = "Score: \(players[player].calculateScore())"
-        cardCollectionViews[player].reloadData()
-        players[player].hand.flipping[card] = false
-    }
-    func highlightCards(highLight: Bool) {
-        var playerCells = [PlayerCardCollectionViewCell]()
-        for i in 0...MAX_CARDS - 1 {
-            playerCells.append(cardCollectionViews[0].dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: IndexPath(item: i, section: 0)) as! PlayerCardCollectionViewCell)
-        }
-        if highLight {
-            for card in 0...MAX_CARDS - 1 {
-                if (players[0].hand.flipped[card] == false) {
-                    cardCollectionViews[0].cellForItem(at: IndexPath(item: card, section: 0))?.backgroundColor = UIColor.blue
-                }
-            }
-        } else {
-            for card in 0...MAX_CARDS - 1 {
-                if (players[0].hand.flipped[card] == false) {
-                    playerCells[card].backgroundColor = UIColor.clear
-                    cardCollectionViews[0].cellForItem(at: IndexPath(item: card, section: 0))?.backgroundColor = UIColor.clear
-                }
-            }
-        }
+        cardCollectionViews[player].reloadItems(at: [indexPath])
     }
     
     func aiTurns() {
         var turn_duration = 0
         for player in 1...players.count - 1 {
+            //turn_duration += cardsTraded * TRADE_CARD_DURATION + cardsFlipped * FLIP_CARD_DURATION + cardsDrawn * DRAW_CARD_DURATION
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(turn_duration), execute: {
-                turn_duration += self.aiTurnLogic(player: player)
-                self.deckButton.isEnabled = true
-                self.dealtPileButton.isEnabled = true
-                (self.checkGame()) ? self.endGame() : print("your turn")
+                self.aiTurnLogic(player: player)
             })
+            turn_duration += 3
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(turn_duration), execute: {
+            (self.checkGame()) ? self.endGame() : print("your turn")
+        })
     }
     
-    func aiTurnLogic(player: Int) -> Int{
+    func aiTurnLogic(player: Int){
         var turn_duration = 0
+        print("Player \(player)'s turn")
         if (dealtPile.peek()?.rank.rankDescription() == "king") {
-            turn_duration += 2
             tradeCard(player: player, card: players[player].worstCard())
-            print("card traded")
+            print("traded \(players[player].worstCard()) for a King")
+            turn_duration += TRADE_CARD_DURATION
         } else {
             if(((dealtPile.peek()?.rank.cardValue())!) < players[player].worstCard()) {
-                turn_duration += 2
                 tradeCard(player: player, card: players[player].worstCard())
-                print("card traded for better card")
+                print("traded \(dealtPile.peek()!.rank.cardValue()) for \(players[player].worstCard())")
+                turn_duration += TRADE_CARD_DURATION
             } else {
-                turn_duration += 1
                 drawCard()
-                print("drew card")
-                if((dealtPile.peek()!.rank.cardValue()) < players[player].worstCard()) {
-                    turn_duration += 2
-                    tradeCard(player: player, card: players[player].worstCard())
-                    print("card traded for better card")
-                } else {
-                    flipCard(player: player, card: players[player].bestCard())
-                    print("card flipped")
-                }
+                turn_duration += DRAW_CARD_DURATION
+                print("drew \(dealtPile.peek()!.rank.rankDescription())")
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(turn_duration), execute: {
+                    if((self.dealtPile.peek()!.rank.cardValue()) < self.players[player].worstCard()) {
+                        self.tradeCard(player: player, card: self.players[player].worstCard())
+                        print("traded \(self.dealtPile.peek()!.rank.cardValue()) for \(self.players[player].worstCard())")
+                        turn_duration += self.TRADE_CARD_DURATION
+                    } else {
+                        self.flipCard(player: player, card: self.players[player].bestCard())
+                        print("flipped \(self.players[player].bestCard())")
+                        turn_duration += self.FLIP_CARD_DURATION
+                    }
+                })
             }
         }
-        return turn_duration
     }
     
     func checkGame() -> Bool{
@@ -324,13 +356,13 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
         cell.imageView.contentMode = UIView.ContentMode.scaleToFill
         if (players.isEmpty == true) {
-            cell.imageView.image = UIImage(named: "back")
             cell.layer.borderColor = UIColor.blue.cgColor
             cell.layer.borderWidth = 2.0
         } else if (players[collectionView.tag].hand.flipped[indexPath.item] == false) {
             if (collectionView.tag == 0 && (indexPath.item == 2 || indexPath.item == 3)) {
                 cell.card = players[collectionView.tag].hand.card[indexPath.item]
                 cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+                cell.backgroundColor = UIColor.white
             } else {
                 cell.card = players[collectionView.tag].hand.card[indexPath.item]
                 cell.imageView.image = UIImage(named: "back")
@@ -338,40 +370,31 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             cell.layer.borderColor = UIColor.blue.cgColor
             cell.layer.borderWidth = 2.0
         } else {
-            if players[collectionView.tag].hand.flipping[indexPath.item] == true {
-                cell.card = players[collectionView.tag].hand.card[indexPath.item]
-                UIView.transition(with: cell.imageView, duration: 2.0, options: .transitionFlipFromLeft, animations: {
-                    cell.imageView.image = UIImage(named: self.players[collectionView.tag].hand.card[indexPath.item].image)
-                }, completion: nil)
-            } else {
-                cell.card = players[collectionView.tag].hand.card[indexPath.item]
-                cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
-                cell.layer.borderColor = UIColor.red.cgColor
-                cell.layer.borderWidth = 2.0
-            }
+            cell.card = players[collectionView.tag].hand.card[indexPath.item]
+            cell.imageView.image = UIImage(named: players[collectionView.tag].hand.card[indexPath.item].image)
+            cell.layer.borderColor = UIColor.red.cgColor
+            cell.layer.borderWidth = 2.0
+            cell.backgroundColor = UIColor.white
         }
-        cell.imageView.contentMode = UIView.ContentMode.scaleAspectFit
-        cell.backgroundColor = UIColor.white
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PlayerCardCollectionViewCell
         cell.beingFlipped = true
-        var animation_duration = 0
+        var turn_duration = 0
         if (tradingCard == true) {
             self.tradeCard(player: collectionView.tag, card: indexPath.item)
-            animation_duration += 2
+            turn_duration += TRADE_CARD_DURATION
             tradingCard = false
         } else {
             self.flipCard(player: collectionView.tag, card: indexPath.item)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(animation_duration), execute: {
-            self.deckButton.isEnabled = false
-            self.dealtPileButton.isEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(turn_duration), execute: {
+//            self.deckButton.isEnabled = false
+//            self.dealtPileButton.isEnabled = false
             self.aiTurns()
             self.drewCard = false
         })
-        animation_duration = 0
     }
 }
